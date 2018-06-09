@@ -1,24 +1,19 @@
-# Change Log
-All notable changes to this project will be documented in this file. This change log follows the conventions of [keepachangelog.com](http://keepachangelog.com/).
+# Changelog
 
-## [Unreleased]
-### Changed
-- Add a new arity to `make-widget-async` to provide a different widget shape.
+All notable changes to this project will be documented in this file.
 
-## [0.1.1] - 2018-06-09
-### Changed
-- Documentation on how to make the widgets.
+This changelog mostly follows the conventions of
+[Keep a Changelog](http://keepachangelog.com/en/1.0.0/); it deviates from those
+conventions by not making versions and sections linkable.
 
-### Removed
-- `make-widget-sync` - we're all async, all the time.
+This project uses [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
+In addition, breaking changes between successive
+initial development versions (that is 0.y.z versions)
+are explicitly noted.
 
-### Fixed
-- Fixed widget maker to keep working when daylight savings switches over.
 
-## 0.1.0 - 2018-06-09
+## Unreleased
+
 ### Added
-- Files from the new template.
-- Widget maker public API - `make-widget-sync`.
 
-[Unreleased]: https://github.com/your-name/clj-utils/compare/0.1.1...HEAD
-[0.1.1]: https://github.com/your-name/clj-utils/compare/0.1.0...0.1.1
+- Initial release.
