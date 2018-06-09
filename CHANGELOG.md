@@ -14,7 +14,13 @@ are explicitly noted.
 
 ## Unreleased
 
-- <nothing yet>
+- Add `map-kv`.
+- Add `group-by-kv`.
+- Add `group-by-k`.
+- Add `group-by-v`.
+- Add `emacs-temp-file-path`.
+- Add `emacs-temp-file`.
+
 
 ### Diffs
 

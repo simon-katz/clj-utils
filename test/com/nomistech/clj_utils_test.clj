@@ -121,6 +121,88 @@
       :b 3})
 
 ;;;; ___________________________________________________________________________
+;;;; ---- sut/map-kv ----
+
+(fact "`sut/map-kv`" works
+  (sut/map-kv (fn [k v] [(keyword k)
+                         (inc v)])
+              {"a" 1
+               "b" 2})
+  => {:a 2
+      :b 3})
+
+;;;; ___________________________________________________________________________
+;;;; ---- sut/group-by-kv ----
+
+(fact "`sut/group-by-kv` works"
+
+  (fact "keys"
+    (sut/group-by-kv (fn [k v] (rem k 3))
+                     {0 :zero
+                      1 :one
+                      2 :two
+                      3 :three
+                      4 :four
+                      5 :five})
+    => {0 {0 :zero
+           3 :three}
+        1 {1 :one
+           4 :four}
+        2 {2 :two
+           5 :five}})
+  
+  (fact "vals"
+    (sut/group-by-kv (fn [k v] (rem v 3))
+                     {:zero  0
+                      :one   1
+                      :two   2
+                      :three 3
+                      :four  4
+                      :five  5})
+    => {0 {:zero  0
+           :three 3}
+        1 {:one  1
+           :four 4}
+        2 {:two  2
+           :five 5}}))
+
+;;;; ___________________________________________________________________________
+;;;; ---- sut/group-by-k ----
+
+(fact "`sut/group-by-k` works"
+  (sut/group-by-k (fn [k] (rem k 3))
+                  {0 :zero
+                   1 :one
+                   2 :two
+                   3 :three
+                   4 :four
+                   5 :five})
+  => {0 {0 :zero
+         3 :three}
+      1 {1 :one
+         4 :four}
+      2 {2 :two
+         5 :five}})
+
+;;;; ___________________________________________________________________________
+;;;; ---- sut/group-by-v ----
+
+(fact "`sut/group-by-v` works"
+  (sut/group-by-v (fn [v] (rem v 3))
+                  {:zero  0
+                   :one   1
+                   :two   2
+                   :three 3
+                   :four  4
+                   :five  5})
+  => {0 {:zero  0
+         :three 3}
+      1 {:one  1
+         :four 4}
+      2 {:two  2
+         :five 5}})
+
+;;;; ___________________________________________________________________________
 ;;;; ---- sut/transitive-closure ----
 
 ;; TODO: More substantial tests of `sut/transitive-closure`, e.g. edge cases.
@@ -434,3 +516,36 @@
     (sut/last-index-of-char-in-string \c "abc") => 2
     (sut/last-index-of-char-in-string \c "abcde") => 2
     (sut/last-index-of-char-in-string \c "abcce") => 3))
+
+;;;; ___________________________________________________________________________
+;;;; Detection of Emacs temp files
+
+(fact "Emacs temp files"
+
+  (fact "sut/emacs-temp-file-path?"
+    
+    (fact "lock file"
+      (sut/emacs-temp-file-path? "/a/b/.#foo")
+      => truthy)
+
+    (fact "autosave file"
+      (sut/emacs-temp-file-path? "/a/b/#foo#")
+      => truthy)
+
+    (fact "ordinary file"
+      (sut/emacs-temp-file-path? "/a/b/foo")
+      => falsey))
+
+  (fact "emacs-temp-file?"
+    
+    (fact "lock file"
+      (sut/emacs-temp-file? (java.io.File. "/a/b/.#foo"))
+      => truthy)
+
+    (fact "autosave file"
+      (sut/emacs-temp-file? (java.io.File. "/a/b/#foo#"))
+      => truthy)
+
+    (fact "ordinary file"
+      (sut/emacs-temp-file? (java.io.File. "/a/b/foo"))
+      => falsey)))

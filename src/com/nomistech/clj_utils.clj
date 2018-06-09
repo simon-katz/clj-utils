@@ -1,4 +1,5 @@
-(ns com.nomistech.clj-utils)
+(ns com.nomistech.clj-utils
+  (:require [clojure.string :as str]))
 
 ;;;; ___________________________________________________________________________
 ;;;; ---- do1 ----
@@ -58,6 +59,36 @@
   (into {}
         (for [[k v] m]
           [k (f v)])))
+
+;;;; ___________________________________________________________________________
+;;;; ---- map-kv ----
+
+(defn map-kv [f m]
+  (into {}
+        (for [[k v] m]
+          (f k v))))
+
+;;;; ___________________________________________________________________________
+;;;; ---- group-by-kv ----
+
+(defn group-by-kv [f m]
+  (map-vals #(into {} %)
+            (group-by (fn [[k v]] (f k v))
+                      m)))
+
+;;;; ___________________________________________________________________________
+;;;; ---- group-by-k ----
+
+(defn group-by-k [f m]
+  (group-by-kv (fn [k _] (f k))
+               m))
+
+;;;; ___________________________________________________________________________
+;;;; ---- group-by-v ----
+
+(defn group-by-v [f m]
+  (group-by-kv (fn [_ v] (f v))
+               m))
 
 ;;;; ___________________________________________________________________________
 ;;;; ---- transitive-closure ----
@@ -255,3 +286,32 @@
   ;;     (time (dotimes [i 1000000] (last-index-of-char-in-string \c "abcdef")))
   ;;     "Elapsed time: 18.44 msecs"
   (.lastIndexOf string (int char)))
+
+;;;; ___________________________________________________________________________
+;;;; Detection of Emacs temp files
+;;;; - Copied from `stasis.core`.
+
+(def ^:private fsep (java.io.File/separator))
+(def ^:private fsep-regex (java.util.regex.Pattern/quote fsep))
+
+(defn ^:private normalize-path [^String path]
+  (if (= fsep "/")
+    path
+    (.replaceAll path fsep-regex "/")))
+
+(defn ^:private get-path [^java.io.File path]
+  (-> path
+      .getPath
+      normalize-path))
+
+(defn ^:private path->filename [^String path]
+  (last (str/split path #"/")))
+
+(defn emacs-temp-file-path? [^String path]
+  (let [filename (path->filename path)]
+    (or (.startsWith filename ".#")
+        (and (.startsWith filename "#")
+             (.endsWith filename "#")))))
+
+(defn emacs-temp-file? [^java.io.File file]
+  (-> file get-path emacs-temp-file-path?))
