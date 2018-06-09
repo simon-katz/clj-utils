@@ -1,6 +1,6 @@
 # clj-utils
 
-Clojure REPL tools.
+Simon's Clojure utilities.
 
 **This documentation tracks the `master` branch. Consult
 the relevant Git tag (e.g. `0.1.2`) if you need documentation for a
@@ -11,12 +11,22 @@ specific release.**
 
 Current version:
 
-FIXME
+[![Clojars Project](https://img.shields.io/clojars/v/com.nomistech/clj-utils.svg)](https://clojars.org/com.nomistech/clj-utils)
+
+To include in your Leiningen project, add the above to the dependencies in
+your `project.clj`.
 
 
 ## Usage
 
-FIXME The namespace to require. See doc strings for individual functions. Can you get auto-documentation to somewhere?
+Add something like the following to your namespace declaration(s):
+
+```clj
+    (:require [com.nomistech.clj-utils :as nu])
+```
+
+For now, the only documentation is doc strings.
+
 
 ## License
 
