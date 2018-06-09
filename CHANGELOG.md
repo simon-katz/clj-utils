@@ -13,7 +13,8 @@ are explicitly noted.
 
 ## Unreleased
 
-- (nothing yet)
+- Add philosophy to README
+
 
 ### Diffs
 

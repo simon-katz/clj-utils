@@ -7,6 +7,19 @@ the relevant Git tag (e.g. `0.1.2`) if you need documentation for a
 specific release.**
 
 
+## Philosophy
+
+Are utility libraries A Bad Thing?
+
+- One answer: Yes.
+
+- Another answer: If they get to be a bucket for everything, then yes; if care is taken about what goes in them, then no.
+
+This library is intended to be a set of low-level things that one could argue are missing from Clojure. (However, by that rule some of the things included should probably not be — they are perhaps not low-level enough.)
+
+I'm happy to use this library from my own higher-level libraries and projects. If other people use it, so be it.
+
+
 ## Installation
 
 Current version:
