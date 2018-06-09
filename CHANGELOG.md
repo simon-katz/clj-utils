@@ -12,7 +12,9 @@ initial development versions (that is 0.y.z versions)
 are explicitly noted.
 
 
-## Unreleased
+## 0.2.0 — 2018-06-09
+
+### Added
 
 - Add `map-kv`.
 - Add `group-by-kv`.
@@ -24,7 +26,7 @@ are explicitly noted.
 
 ### Diffs
 
-https://github.com/simon-katz/clj-utils/compare/0.1.0...HEAD
+https://github.com/simon-katz/clj-utils/compare/0.1.0...0.2.0
 
 
 ## 0.1.0 — 2018-06-09
