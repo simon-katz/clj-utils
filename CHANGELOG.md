@@ -11,14 +11,20 @@ In addition, breaking changes between successive
 initial development versions (that is 0.y.z versions)
 are explicitly noted.
 
-## Unreleased
+## 0.3.0 — 2018-06-21
 
-- Add philosophy to README
+### Added
+
+- Add philosophy to README.
+
+### Changed
+
+- Change `with-extras` to take a map as its first arg.
 
 
 ### Diffs
 
-https://github.com/simon-katz/clj-utils/compare/0.2.0...HEAD
+https://github.com/simon-katz/clj-utils/compare/0.2.0...0.3.0
 
 
 ## 0.2.0 — 2018-06-09
