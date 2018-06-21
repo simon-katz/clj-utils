@@ -154,7 +154,7 @@
 ;;;; ___________________________________________________________________________
 ;;;; ---- with-extras ----
 
-(defmacro with-extras [[& {:keys [before after]}]
+(defmacro with-extras [{:keys [before after]}
                        & body]
   "Does `before`, then `body`, then `after`. Returns the result of `body`.
   If `body` throws an exception, `after` is still done."

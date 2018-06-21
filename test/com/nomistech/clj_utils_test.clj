@@ -268,8 +268,8 @@
   (fact "without an exception"
     (let [side-effect-place (atom [])]
       (fact "Value is correct"
-        (sut/with-extras [:before (swap! side-effect-place conj 1)
-                          :after  (swap! side-effect-place conj 3)] 
+        (sut/with-extras {:before (swap! side-effect-place conj 1)
+                          :after  (swap! side-effect-place conj 3)} 
           (do (swap! side-effect-place conj 2)
               :a))
         => :a)
@@ -279,8 +279,8 @@
   (fact "with an exception"
     (let [side-effect-place (atom [])]
       (fact "throws"
-        (sut/with-extras [:before (swap! side-effect-place conj 1)
-                          :after  (swap! side-effect-place conj 3)] 
+        (sut/with-extras {:before (swap! side-effect-place conj 1)
+                          :after  (swap! side-effect-place conj 3)} 
           (do (/ 0 0)
               (swap! side-effect-place conj 2)
               :a))
