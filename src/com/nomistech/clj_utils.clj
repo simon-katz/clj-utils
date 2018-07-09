@@ -157,11 +157,15 @@
 (defmacro with-extras [{:keys [before after]}
                        & body]
   "Does `before`, then `body`, then `after`. Returns the result of `body`.
-  If `body` throws an exception, `after` is still done."
+  Within `after`, the result of `body` is available as `%result%`.
+  If `body` throws an exception `after` is still done, with `%result%` bound
+  to the exception."
   `(do ~before
-       (try (do ~@body)
-            (finally
-              ~after))))
+       (let [~'%result% (try (do ~@body)
+                             (catch Exception ~'e
+                               ~'e))]
+         ~after
+         ~'%result%)))
 
 ;;;; ___________________________________________________________________________
 ;;;; ---- member? ----

@@ -269,10 +269,10 @@
     (let [side-effect-place (atom [])]
       (fact "Value is correct"
         (sut/with-extras {:before (swap! side-effect-place conj 1)
-                          :after  (swap! side-effect-place conj 3)}
+                          :after  (swap! side-effect-place conj %result%)}
           (do (swap! side-effect-place conj 2)
-              :a))
-        => :a)
+              3))
+        => 3)
       (fact "Forms are evaluated in correct order"
         @side-effect-place => [1 2 3])))
 
@@ -280,13 +280,13 @@
     (let [side-effect-place (atom [])]
       (fact "throws"
         (sut/with-extras {:before (swap! side-effect-place conj 1)
-                          :after  (swap! side-effect-place conj 3)}
+                          :after  (swap! side-effect-place conj %result%)}
           (do (/ 0 0)
               (swap! side-effect-place conj 2)
-              :a))
+              3))
         => throws)
       (fact "`after` is still done"
-        @side-effect-place => [1 3]))))
+        @side-effect-place => (just [1 #(instance? Exception %)])))))
 
 ;;;; ___________________________________________________________________________
 ;;;; ---- sut/member? ----
