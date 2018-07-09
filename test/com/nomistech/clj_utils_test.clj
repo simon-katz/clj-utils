@@ -10,17 +10,17 @@
   (fact "Fails to compile when there are no forms"
     (macroexpand-1 '(sut/do1))
     => (throws clojure.lang.ArityException))
-  
+
   (fact "Returns value of first form when there is one form"
     (sut/do1 :a)
     => :a)
-  
+
   (fact "Returns value of first form when there are two forms"
     (sut/do1
         :a
       :b)
     => :a)
-  
+
   (fact "Returns value of first form when there are three forms"
     (sut/do1
         :a
@@ -35,7 +35,7 @@
         (swap! side-effect-place conj 2)
         (swap! side-effect-place conj 3))
       => anything
-      (fact 
+      (fact
         @side-effect-place => [1 2 3]))))
 
 ;;;; ___________________________________________________________________________
@@ -50,13 +50,13 @@
   (fact "Fails to compile when there is one forms"
     (macroexpand-1 '(sut/do2 :a))
     => (throws clojure.lang.ArityException))
-  
+
   (fact "Returns value of second form when there are two forms"
     (sut/do2
         :a
         :b)
     => :b)
-  
+
   (fact "Returns value of second form when there are three forms"
     (sut/do2
         :a
@@ -71,7 +71,7 @@
           (swap! side-effect-place conj 2)
         (swap! side-effect-place conj 3))
       => anything
-      (fact 
+      (fact
         @side-effect-place => [1 2 3]))))
 
 ;;;; ___________________________________________________________________________
@@ -150,7 +150,7 @@
            4 :four}
         2 {2 :two
            5 :five}})
-  
+
   (fact "vals"
     (sut/group-by-kv (fn [k v] (rem v 3))
                      {:zero  0
@@ -269,7 +269,7 @@
     (let [side-effect-place (atom [])]
       (fact "Value is correct"
         (sut/with-extras {:before (swap! side-effect-place conj 1)
-                          :after  (swap! side-effect-place conj 3)} 
+                          :after  (swap! side-effect-place conj 3)}
           (do (swap! side-effect-place conj 2)
               :a))
         => :a)
@@ -280,7 +280,7 @@
     (let [side-effect-place (atom [])]
       (fact "throws"
         (sut/with-extras {:before (swap! side-effect-place conj 1)
-                          :after  (swap! side-effect-place conj 3)} 
+                          :after  (swap! side-effect-place conj 3)}
           (do (/ 0 0)
               (swap! side-effect-place conj 2)
               :a))
@@ -339,14 +339,14 @@
     => {:a 1
         :b 2
         :c 3})
-  
+
   (fact "replacing merge"
     (sut/deep-merge {:a 1
                      :b {:bb 22}}
                     {:b 999})
     => {:a 1
         :b 999})
-  
+
   (fact "deep merge"
     (sut/deep-merge {:a 1
                      :b {:bb 22}}
@@ -355,17 +355,17 @@
     => {:a 1
         :b {:ba 21
             :bb 999}})
-  
+
   (fact "merge in an empty map"
     (sut/deep-merge {:a 1 :b {:bb 22}}
                     {:b {}})
     => {:a 1 :b {:bb 22}})
-  
+
   (fact "merge in nil"
     (sut/deep-merge {:a 1 :b {:bb 22}}
                     {:b nil})
     => {:a 1 :b nil})
-  
+
   (fact "merge multiple maps"
     (sut/deep-merge {:a 1 :b 2 :c 3}
                     {:a 11 :b 12}
@@ -479,7 +479,7 @@
       (fact (chunked-seq? my-chunked-seq) => true)
       (fact (chunked-seq? (-> my-chunked-seq rest)) => true)
       (fact (chunked-seq? (-> my-chunked-seq rest rest)) => true))
-    
+
     (fact "`(sut/unchunk my-chunked-seq)` is not chunked"
       (fact (chunked-seq? (sut/unchunk my-chunked-seq)) => false)
       (fact (chunked-seq? (-> (sut/unchunk my-chunked-seq) rest)) => false)
@@ -523,7 +523,7 @@
 (fact "Emacs temp files"
 
   (fact "sut/emacs-temp-file-path?"
-    
+
     (fact "lock file"
       (sut/emacs-temp-file-path? "/a/b/.#foo")
       => truthy)
@@ -537,7 +537,7 @@
       => falsey))
 
   (fact "emacs-temp-file?"
-    
+
     (fact "lock file"
       (sut/emacs-temp-file? (java.io.File. "/a/b/.#foo"))
       => truthy)

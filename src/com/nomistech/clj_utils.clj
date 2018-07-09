@@ -159,8 +159,8 @@
   "Does `before`, then `body`, then `after`. Returns the result of `body`.
   If `body` throws an exception, `after` is still done."
   `(do ~before
-       (try (do ~@body)  
-            (finally 
+       (try (do ~@body)
+            (finally
               ~after))))
 
 ;;;; ___________________________________________________________________________
