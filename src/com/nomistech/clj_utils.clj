@@ -165,8 +165,7 @@
   [{:keys [before after]}
    & body]
   "Does `before`, then `body`, then `after`. Returns the result of `body`.
-  Within `after`, the result of `body` is available as `%result%`.
-  If `body` throws an exception, `after` is not done."
+  Within `after`, the result of `body` is available as `%result%`."
   `(fun-with-extras (fn [] ~before)
                     (fn [~'%result%] ~after)
                     (fn [] ~@body)))
