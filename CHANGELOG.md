@@ -13,7 +13,10 @@ are explicitly noted.
 
 ## Unreleased
 
-- (nothing yet)
+### Changed
+
+- Change `with-extras` to not catch exceptions.
+
 
 ### Diffs
 

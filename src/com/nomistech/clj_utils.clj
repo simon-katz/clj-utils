@@ -154,16 +154,15 @@
 ;;;; ___________________________________________________________________________
 ;;;; ---- with-extras ----
 
-(defmacro with-extras [{:keys [before after]}
-                       & body]
+(defmacro with-extras
+  {:style/indent 1}
+  [{:keys [before after]}
+   & body]
   "Does `before`, then `body`, then `after`. Returns the result of `body`.
   Within `after`, the result of `body` is available as `%result%`.
-  If `body` throws an exception `after` is still done, with `%result%` bound
-  to the exception."
+  If `body` throws an exception, `after` is not done."
   `(do ~before
-       (let [~'%result% (try (do ~@body)
-                             (catch Exception ~'e
-                               ~'e))]
+       (let [~'%result% (do ~@body)]
          ~after
          ~'%result%)))
 
