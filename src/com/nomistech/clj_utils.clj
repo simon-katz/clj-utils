@@ -154,6 +154,12 @@
 ;;;; ___________________________________________________________________________
 ;;;; ---- with-extras ----
 
+(defn fun-with-extras [before-f after-f f]
+  (before-f)
+  (let [result (f)]
+    (after-f result)
+    result))
+
 (defmacro with-extras
   {:style/indent 1}
   [{:keys [before after]}
@@ -161,10 +167,9 @@
   "Does `before`, then `body`, then `after`. Returns the result of `body`.
   Within `after`, the result of `body` is available as `%result%`.
   If `body` throws an exception, `after` is not done."
-  `(do ~before
-       (let [~'%result% (do ~@body)]
-         ~after
-         ~'%result%)))
+  `(fun-with-extras (fn [] ~before)
+                    (fn [~'%result%] ~after)
+                    (fn [] ~@body)))
 
 ;;;; ___________________________________________________________________________
 ;;;; ---- member? ----
