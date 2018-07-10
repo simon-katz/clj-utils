@@ -11,7 +11,7 @@ In addition, breaking changes between successive
 initial development versions (that is 0.y.z versions)
 are explicitly noted.
 
-## Unreleased
+## 0.5.0 — 2018-07-10
 
 ### Changed
 
@@ -20,7 +20,7 @@ are explicitly noted.
 
 ### Diffs
 
-https://github.com/simon-katz/clj-utils/compare/0.4.0...HEAD
+https://github.com/simon-katz/clj-utils/compare/0.4.0...0.5.0
 
 
 ## 0.4.0 — 2018-07-09
