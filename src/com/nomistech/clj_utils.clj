@@ -76,6 +76,74 @@
           (f k v))))
 
 ;;;; ___________________________________________________________________________
+;;;; ---- postwalk-applying-to-maps ----
+
+(defn ^:private postwalk-applying-to-maps [entry-fn x]
+  (clojure.walk/postwalk (fn [xx] (if (map? xx)
+                                    (into {} (map entry-fn xx))
+                                    xx))
+                         x))
+
+;;;; ___________________________________________________________________________
+;;;; ---- map-keys-recursively-applying-to-maps ----
+
+(defn map-keys-recursively-applying-to-maps
+  "Walk `x`, applying `f` to the keys of any maps.
+  Call `f` when the keys are themselves maps."
+  [f x]
+  (let [entry-fn (fn [[k v]] [(f k) v])]
+    (postwalk-applying-to-maps entry-fn x)))
+
+;;;; ___________________________________________________________________________
+;;;; ---- map-keys-recursively ----
+
+(defn map-keys-recursively
+  "Walk `x`, applying `f` to the keys of any maps.
+  Don't call `f` when the keys are themselves maps."
+  [f x]
+  (let [entry-fn (fn [[k v]] [(if (map? k)
+                                ;; leave untouched; walking deeper levels will
+                                ;; deal with this
+                                k
+                                (f k))
+                              v])]
+    (postwalk-applying-to-maps entry-fn x)))
+
+;;;; ___________________________________________________________________________
+;;;; ---- map-vals-recursively-applying-to-maps ----
+
+(defn map-vals-recursively-applying-to-maps
+  "Walk `x`, applying `f` to the vals of any maps.
+  Call `f` when the keys are themselves maps."
+  [f x]
+  (let [entry-fn (fn [[k v]] [k (f v)])]
+    (postwalk-applying-to-maps entry-fn x)))
+
+;;;; ___________________________________________________________________________
+;;;; ---- map-vals-recursively ----
+
+(defn map-vals-recursively
+  "Walk `x`, applying `f` to the vals of any maps.
+  Don't call `f` when the keys are themselves maps."
+  [f x]
+  (let [entry-fn (fn [[k v]] [k
+                              (if (map? v)
+                                ;; leave untouched; walking deeper levels will
+                                ;; deal with this
+                                v
+                                (f v))])]
+    (postwalk-applying-to-maps entry-fn x)))
+
+;;;; ___________________________________________________________________________
+;;;; ---- map-kv-recursively ----
+
+(defn map-kv-recursively
+  "Walk `x`, applying `f` to any map entries."
+  [f x]
+  (let [entry-fn (fn [[k v]] (f k v))]
+    (postwalk-applying-to-maps entry-fn x)))
+
+;;;; ___________________________________________________________________________
 ;;;; ---- group-by-kv ----
 
 (defn group-by-kv [f m]

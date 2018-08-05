@@ -132,6 +132,88 @@
       :b 3})
 
 ;;;; ___________________________________________________________________________
+;;;; ---- sut/map-keys-recursively-applying-to-maps ----
+
+(fact "`sut/map-keys-recursively-applying-to-maps` works"
+  (sut/map-keys-recursively-applying-to-maps
+   (fn [x] (if (map? x)
+             (assoc x :transformed? true)
+             (keyword x)))
+   {"a" 1
+    "b" {"c" 3
+         "d" {"e" 5}}
+    {"f" 0} {{"g" 0} 7}})
+  => {:a 1
+      :b {:c 3
+          :d {:e 5}}
+      {:f 0
+       :transformed? true} {{:g 0
+                             :transformed? true} 7}})
+
+;;;; ___________________________________________________________________________
+;;;; ---- sut/map-keys-recursively ----
+
+(fact "`sut/map-keys-recursively` works"
+  (sut/map-keys-recursively keyword
+                            {"a" 1
+                             "b" {"c" 3
+                                  "d" {"e" 5}}
+                             {"f" 0} {{"g" 0} 7}})
+  => {:a 1
+      :b {:c 3
+          :d {:e 5}}
+      {:f 0} {{:g 0} 7}})
+
+;;;; ___________________________________________________________________________
+;;;; ---- sut/map-vals-recursively-applying-to-maps ----
+
+(fact "`sut/map-vals-recursively-applying-to-maps` works"
+  (sut/map-vals-recursively-applying-to-maps
+   (fn [x] (if (map? x)
+             (assoc x :transformed? true)
+             (inc x)))
+   {:a 1
+    :b {:c 3
+        :d {:e 5}}
+    {:f 0} {{:g 0} 7}})
+  => {:a 2
+      :b {:c 4
+          :d {:e 6
+              :transformed? true}
+          :transformed? true}
+      {:f 1} {{:g 1} 8
+              :transformed? true}})
+
+;;;; ___________________________________________________________________________
+;;;; ---- sut/map-vals-recursively ----
+
+(fact "`sut/map-vals-recursively` works"
+  (sut/map-vals-recursively inc
+                            {:a 1
+                             :b {:c 3
+                                 :d {:e 5}}
+                             {:f 0} {{:g 0} 7}})
+  => {:a 2
+      :b {:c 4
+          :d {:e 6}}
+      {:f 1} {{:g 1} 8}})
+
+;;;; ___________________________________________________________________________
+;;;; ---- sut/map-kv-recursively ----
+
+(fact "`sut/map-kv-recursively` works"
+  (sut/map-kv-recursively (fn [k v] [(if (map? k) k (keyword k))
+                                     (if (map? v) v (inc v))])
+                          {"a" 1
+                           "b" {"c" 3
+                                "d" {"e" 5}}
+                           {"f" 0} {{"g" 0} 7}})
+  => {:a 2
+      :b {:c 4
+          :d {:e 6}}
+      {:f 1} {{:g 1} 8}})
+
+;;;; ___________________________________________________________________________
 ;;;; ---- sut/group-by-kv ----
 
 (fact "`sut/group-by-kv` works"
