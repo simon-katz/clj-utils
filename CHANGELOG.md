@@ -11,7 +11,7 @@ In addition, breaking changes between successive
 initial development versions (that is 0.y.z versions)
 are explicitly noted.
 
-## Unreleased
+## 0.6.0 — 2018-08-05
 
 - Add `map-keys-recursively-applying-to-maps`.
 - Add `map-keys-recursively`.
@@ -19,9 +19,10 @@ are explicitly noted.
 - Add `map-vals-recursively`.
 - Add `map-kv-recursively`.
 
+
 ### Diffs
 
-https://github.com/simon-katz/clj-utils/compare/0.5.0...HEAD
+https://github.com/simon-katz/clj-utils/compare/0.5.0...0.6.0
 
 
 
