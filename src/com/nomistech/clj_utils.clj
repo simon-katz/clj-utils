@@ -47,7 +47,9 @@
 ;;;; ___________________________________________________________________________
 ;;;; ---- map-keys ----
 
-(defn map-keys [f m]
+(defn map-keys
+  "Apply `f` to each of the keys of `m`."
+  [f m]
   (into {}
         (for [[k v] m]
           [(f k) v])))
@@ -55,7 +57,9 @@
 ;;;; ___________________________________________________________________________
 ;;;; ---- map-vals ----
 
-(defn map-vals [f m]
+(defn map-vals
+  "Apply `f` to each of the vals of `m`."
+  [f m]
   (into {}
         (for [[k v] m]
           [k (f v)])))
@@ -63,7 +67,10 @@
 ;;;; ___________________________________________________________________________
 ;;;; ---- map-kv ----
 
-(defn map-kv [f m]
+(defn map-kv
+  "Apply `f` to each of the entries of `m`. `f` takes two args, a key and
+  a value."
+  [f m]
   (into {}
         (for [[k v] m]
           (f k v))))

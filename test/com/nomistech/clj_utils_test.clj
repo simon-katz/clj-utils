@@ -103,7 +103,7 @@
 ;;;; ___________________________________________________________________________
 ;;;; ---- sut/map-keys ----
 
-(fact "`sut/map-keys`" works
+(fact "`sut/map-keys` works"
   (sut/map-keys keyword
                 {"a" 1
                  "b" 2})
@@ -113,7 +113,7 @@
 ;;;; ___________________________________________________________________________
 ;;;; ---- sut/map-vals ----
 
-(fact "`sut/map-vals`" works
+(fact "`sut/map-vals` works"
   (sut/map-vals inc
                 {:a 1
                  :b 2})
@@ -123,7 +123,7 @@
 ;;;; ___________________________________________________________________________
 ;;;; ---- sut/map-kv ----
 
-(fact "`sut/map-kv`" works
+(fact "`sut/map-kv` works"
   (sut/map-kv (fn [k v] [(keyword k)
                          (inc v)])
               {"a" 1
