@@ -13,7 +13,11 @@ are explicitly noted.
 
 ## Unreleased
 
-- (nothing yet)
+- Add `map-keys-recursively-applying-to-maps`.
+- Add `map-keys-recursively`.
+- Add `map-vals-recursively-applying-to-maps`.
+- Add `map-vals-recursively`.
+- Add `map-kv-recursively`.
 
 ### Diffs
 
