@@ -1,5 +1,6 @@
 (ns com.nomistech.clj-utils-test
-  (:require [com.nomistech.clj-utils :as sut]
+  (:require [clojure.core.async :as a]
+            [com.nomistech.clj-utils :as sut]
             [midje.sweet :refer :all]))
 
 ;;;; ___________________________________________________________________________
@@ -600,6 +601,66 @@
     (sut/last-index-of-char-in-string \c "abc") => 2
     (sut/last-index-of-char-in-string \c "abcde") => 2
     (sut/last-index-of-char-in-string \c "abcce") => 3))
+
+;;;; ___________________________________________________________________________
+;;;; ---- limiting-n-executions ----
+
+(fact "`sut/limiting-n-executions` works"
+  ;; Do the following:
+  ;; - Set up the maximum number of concurrent executions, and have them block.
+  ;; - Try another concurrent execution and check the result.
+  ;; - Tidy up, checking the results of all the concurrent executions.
+  (let [n-execs-in-this-test (atom 0)]
+    (let [max-concurrent-requests-for-test 5
+          unblock-chan (a/chan)
+          results-of-blocking-requests (atom [])
+          limiter-id (gensym)]
+      (letfn [(do-call-with-limited-executions-wrapping []
+                (sut/limiting-n-executions
+                 limiter-id
+                 max-concurrent-requests-for-test
+                 (fn []
+                   ;; Block until we are told to unblock.
+                   (swap! n-execs-in-this-test inc)
+                   (a/<!! unblock-chan)
+                   (swap! n-execs-in-this-test dec)
+                   :not-too-many-executions)
+                 (fn []
+                   :too-many-executions)))
+              (wait-for [f]
+                (loop []
+                  (when-not (f)
+                    (Thread/sleep 100)
+                    (recur))))
+              (wait-for-blocking-requests-to-be-in-progress []
+                (wait-for #(>= @n-execs-in-this-test
+                               max-concurrent-requests-for-test)))
+              (wait-for-blocking-requests-to-be-completed []
+                (wait-for #(zero? @n-execs-in-this-test)))
+              (setup-concurrent-blocking-requests []
+                (dotimes [_ max-concurrent-requests-for-test]
+                  (future (swap! results-of-blocking-requests
+                                 conj
+                                 (do-call-with-limited-executions-wrapping))))
+                (wait-for-blocking-requests-to-be-in-progress))
+              (complete-the-blocked-requests []
+                (dotimes [_ max-concurrent-requests-for-test]
+                  (a/>!! unblock-chan :unblock))
+                (wait-for-blocking-requests-to-be-completed)
+                (assert (= @results-of-blocking-requests
+                           (repeat max-concurrent-requests-for-test
+                                   :not-too-many-executions))
+                        "The blocked requests have all been unblocked"))
+              (tidy-up []
+                (complete-the-blocked-requests)
+                (a/close! unblock-chan))]
+
+        (setup-concurrent-blocking-requests)
+        (fact "We avoid too many concurrent executions"
+          (do-call-with-limited-executions-wrapping)
+          => :too-many-executions)
+
+        (tidy-up)))))
 
 ;;;; ___________________________________________________________________________
 ;;;; Detection of Emacs temp files

@@ -370,6 +370,33 @@
   (.lastIndexOf string (int char)))
 
 ;;;; ___________________________________________________________________________
+;;;; ---- limiting-n-executions ----
+
+;;;; Functionality for limiting the number of concurrent executions of a
+;;;; piece or pieces of code.
+
+(def ^:private limiter-id->n-executions
+  (atom {}))
+
+(defn limiting-n-executions
+  "If we currently do not have too many concurrent executions, call `fun`.
+  Otherwise call `fun-when-too-many`.
+  Not having too many concurrent executions is defined like this:
+  - consider the number of current executions of this function that share the
+    supplied `limiter-id`
+  - this number must be less than `max-executions`."
+  [limiter-id
+   max-executions
+   fun
+   fun-when-too-many]
+  (let [m (swap! limiter-id->n-executions update limiter-id (fnil inc 0))]
+    (try (if (<= (get m limiter-id)
+                 max-executions)
+           (fun)
+           (fun-when-too-many))
+         (finally (swap! limiter-id->n-executions update limiter-id dec)))))
+
+;;;; ___________________________________________________________________________
 ;;;; Detection of Emacs temp files
 ;;;; - Copied from `stasis.core`.
 

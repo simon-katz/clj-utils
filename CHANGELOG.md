@@ -13,7 +13,7 @@ are explicitly noted.
 
 ## Unreleased
 
-- (nothing yet)
+- Add `limiting-n-executions`.
 
 ### Diffs
 

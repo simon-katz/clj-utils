@@ -6,5 +6,6 @@
   :dependencies [[org.clojure/clojure "1.9.0"]]
   :profiles {:dev {:source-paths ["dev"]
                    :dependencies [[nomis-clj-repl-tools "0.1.2"]
-                                  [midje "1.9.1"]]
+                                  [midje "1.9.1"]
+                                  [org.clojure/core.async "0.4.474"]]
                    :plugins [[lein-midje "3.2.1"]]}})
