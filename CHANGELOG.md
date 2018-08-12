@@ -11,13 +11,13 @@ In addition, breaking changes between successive
 initial development versions (that is 0.y.z versions)
 are explicitly noted.
 
-## Unreleased
+## 0.7.0 — 2018-08-12
 
 - Add `limiting-n-executions`.
 
 ### Diffs
 
-https://github.com/simon-katz/clj-utils/compare/0.6.0...HEAD
+https://github.com/simon-katz/clj-utils/compare/0.6.0...0.7.0
 
 
 
