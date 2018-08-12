@@ -1,4 +1,4 @@
-(defproject com.nomistech/clj-utils "0.7.0"
+(defproject com.nomistech/clj-utils "0.8.0-SNAPSHOT"
   :description "Simon's Clojure utilities"
   :url "https://github.com/simon-katz/clj-utils"
   :license {:name "Eclipse Public License"
