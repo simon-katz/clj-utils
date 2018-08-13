@@ -11,13 +11,13 @@ In addition, breaking changes between successive
 initial development versions (that is 0.y.z versions)
 are explicitly noted.
 
-## Unreleased
+## 0.8.0 — 2018-08-13
 
 - Add `with-return-429-if-too-many-requests`.
 
 ### Diffs
 
-https://github.com/simon-katz/clj-utils/compare/0.7.0...HEAD
+https://github.com/simon-katz/clj-utils/compare/0.7.0...0.8.0
 
 
 ## 0.7.0 — 2018-08-12
