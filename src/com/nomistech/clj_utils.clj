@@ -1,5 +1,7 @@
 (ns com.nomistech.clj-utils
-  (:require [clojure.string :as str]))
+  (:require [clojure.set :as set]
+            [clojure.string :as str]
+            [clojure.walk :as walk]))
 
 ;;;; ___________________________________________________________________________
 ;;;; ---- do1 ----
@@ -79,10 +81,10 @@
 ;;;; ---- postwalk-applying-to-maps ----
 
 (defn ^:private postwalk-applying-to-maps [entry-fn x]
-  (clojure.walk/postwalk (fn [xx] (if (map? xx)
-                                    (into {} (map entry-fn xx))
-                                    xx))
-                         x))
+  (walk/postwalk (fn [xx] (if (map? xx)
+                            (into {} (map entry-fn xx))
+                            xx))
+                 x))
 
 ;;;; ___________________________________________________________________________
 ;;;; ---- map-keys-recursively-applying-to-maps ----
@@ -258,7 +260,7 @@
   (= m1 (select-keys m2 (keys m1))))
 
 (defn submap?-v2 [m1 m2]
-  (clojure.set/subset? (set m1) (set m2)))
+  (set/subset? (set m1) (set m2)))
 
 ;;;; ___________________________________________________________________________
 ;;;; ---- deep-merge ----

@@ -1,7 +1,7 @@
 (ns com.nomistech.clj-utils-test
-  (:require [compojure.core :refer [GET]]
-            [clojure.core.async :as a]
+  (:require [clojure.core.async :as a]
             [com.nomistech.clj-utils :as sut]
+            [compojure.core :refer [GET]]
             [midje.sweet :refer :all]
             [ring.mock.request :as mock]))
 
