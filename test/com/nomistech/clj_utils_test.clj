@@ -1,7 +1,9 @@
 (ns com.nomistech.clj-utils-test
-  (:require [clojure.core.async :as a]
+  (:require [compojure.core :refer [GET]]
+            [clojure.core.async :as a]
             [com.nomistech.clj-utils :as sut]
-            [midje.sweet :refer :all]))
+            [midje.sweet :refer :all]
+            [ring.mock.request :as mock]))
 
 ;;;; ___________________________________________________________________________
 ;;;; ---- sut/do1 ----
@@ -661,6 +663,56 @@
           => :too-many-executions)
 
         (tidy-up)))))
+
+;;;; ___________________________________________________________________________
+;;;; ---- with-return-429-if-too-many-requests ----
+
+(fact "`sut/retry-after-value-for-429-responses` returns a value between the min and max inclusive"
+  (let [min-retry-after-secs 10
+        max-retry-after-secs 20
+        retry-after-value-ok? (fn [x]
+                                (<= min-retry-after-secs
+                                    x
+                                    max-retry-after-secs))]
+    (dotimes [i 100] ; check many times because we have randomness
+      (#'sut/retry-after-value-for-429-responses min-retry-after-secs
+                                                 max-retry-after-secs)
+      => retry-after-value-ok?)))
+
+(fact "`sut/with-return-429-if-too-many-requests` works"
+  ;; Keep this test simple by setting max requests to zero and one.
+  (let [retry-after-secs-for-429-response-tests
+        1234
+        ;;
+        expected-429-response-for-tests
+        {:status  429
+         :headers {"Retry-After"  (str retry-after-secs-for-429-response-tests)}
+         :body    nil}
+        ;;
+        make-test-handler
+        (fn [max-concurrent-requests]
+          (GET "/limited-url" []
+            (sut/with-return-429-if-too-many-requests
+                {:limiter-id              (gensym)
+                 :max-concurrent-requests max-concurrent-requests
+                 :min-retry-after-secs    retry-after-secs-for-429-response-tests
+                 :max-retry-after-secs    retry-after-secs-for-429-response-tests}
+              "a response")))
+        ;;
+        do-request
+        (fn [max-concurrent-requests]
+          (let [test-handler (make-test-handler max-concurrent-requests)]
+            (test-handler (mock/request :get "/limited-url"))))]
+
+    (fact "max requests exceeded"
+      (do-request 0)
+      => expected-429-response-for-tests)
+
+    (fact "max requests not exceeded"
+      (do-request 1)
+      => {:status 200
+          :headers {"Content-Type" "text/html; charset=utf-8"}
+          :body "a response"})))
 
 ;;;; ___________________________________________________________________________
 ;;;; Detection of Emacs temp files

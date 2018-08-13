@@ -397,6 +397,56 @@
          (finally (swap! limiter-id->n-executions update limiter-id dec)))))
 
 ;;;; ___________________________________________________________________________
+;;;; ---- with-return-429-if-too-many-requests ----
+
+(defn ^:private retry-after-value-for-429-responses
+  "Return a random integer that is between the min and max retry-after values,
+  inclusive."
+  [min max]
+  (+ min (rand-int (inc (- max min)))))
+
+(defn fun-with-return-429-if-too-many-requests
+  "`options` is a map with the following keys:
+    - :limiter-id
+    - :max-concurrent-requests
+    - :min-retry-after-secs
+    - :max-retry-after-secs
+  If we currently do not have too many concurrent executions, call `fun`.
+  Otherwise return a Ring response map with status 429 and a Retry-After value
+  that is between `min-retry-after-secs` and `max-retry-after-secs`.
+  Not having too many concurrent executions is defined like this:
+  - consider the number of current executions of this function that share the
+    supplied `limiter-id`
+  - this number must be less than `max-concurrent-requests`."
+  [options fun]
+  (let [{:keys [limiter-id
+                max-concurrent-requests
+                min-retry-after-secs
+                max-retry-after-secs]} options]
+    (assert (not (nil? limiter-id)))
+    (assert (not (nil? max-concurrent-requests)))
+    (assert (not (nil? min-retry-after-secs)))
+    (assert (not (nil? max-retry-after-secs)))
+    (let [retry-after-value (retry-after-value-for-429-responses
+                             min-retry-after-secs
+                             max-retry-after-secs)]
+      (limiting-n-executions limiter-id
+                             max-concurrent-requests
+                             fun
+                             (fn []
+                               {:status 429
+                                :headers {"Retry-After" (str
+                                                         retry-after-value)}
+                                :body nil})))))
+
+(defmacro with-return-429-if-too-many-requests
+  "Macro wrapper for `fun-with-return-429-if-too-many-requests`."
+  {:style/indent 1}
+  [options & body]
+  `(fun-with-return-429-if-too-many-requests ~options
+                                             (fn [] ~@body)))
+
+;;;; ___________________________________________________________________________
 ;;;; Detection of Emacs temp files
 ;;;; - Copied from `stasis.core`.
 

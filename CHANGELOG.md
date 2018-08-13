@@ -13,7 +13,7 @@ are explicitly noted.
 
 ## Unreleased
 
-- (nothing yet)
+- Add `with-return-429-if-too-many-requests`.
 
 ### Diffs
 
