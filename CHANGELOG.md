@@ -11,6 +11,15 @@ In addition, breaking changes between successive
 initial development versions (that is 0.y.z versions)
 are explicitly noted.
 
+## Unreleased
+
+- (nothing yet)
+
+### Diffs
+
+https://github.com/simon-katz/clj-utils/compare/0.9.0...HEAD
+
+
 ## 0.9.0 — 2018-10-20
 
 - Change `deep-merge` to treat nil values as empty maps.
