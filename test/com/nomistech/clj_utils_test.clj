@@ -448,16 +448,30 @@
                     {:b {}})
     => {:a 1 :b {:bb 22}})
 
-  (fact "merge in nil"
-    (sut/deep-merge {:a 1 :b {:bb 22}}
-                    {:b nil})
-    => {:a 1 :b nil})
-
   (fact "merge multiple maps"
     (sut/deep-merge {:a 1 :b 2 :c 3}
                     {:a 11 :b 12}
                     {:a 101})
-    => {:a 101 :b 12 :c 3}))
+    => {:a 101 :b 12 :c 3})
+
+  (fact "`nil` is treated as an empty map at top level"
+    (sut/deep-merge nil
+                    {:a 1
+                     :b 2}
+                    nil
+                    {:c 3}
+                    nil)
+    => {:a 1
+        :b 2
+        :c 3})
+
+  (fact "`nil` is treated as an empty map at non-top level"
+    (sut/deep-merge {:b nil}
+                    {:a 1
+                     :b {:bb 22}}
+                    {:b nil})
+    => {:a 1
+        :b {:bb 22}}))
 
 ;;;; ___________________________________________________________________________
 ;;;; ---- sut/select-keys-recursively ----

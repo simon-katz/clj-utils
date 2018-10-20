@@ -13,7 +13,7 @@ are explicitly noted.
 
 ## Unreleased
 
-- (nothing yet)
+- Change `deep-merge` to treat nil values as empty maps.
 
 ### Diffs
 

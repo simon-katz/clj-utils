@@ -266,11 +266,14 @@
 ;;;; ---- deep-merge ----
 
 (defn deep-merge
-  "Recursively merges maps. If vals are not maps, the last value wins."
+  "Recursively merges maps.
+  `nil` is treated as an empty map (to match the behaviour of `merge`).
+  If vals are not maps, the last value wins."
   [& vals]
-  (if (every? map? vals)
-    (apply merge-with deep-merge vals)
-    (last vals)))
+  (let [vals (replace {nil {}} vals)]
+    (if (every? map? vals)
+      (apply merge-with deep-merge vals)
+      (last vals))))
 
 ;;;; ___________________________________________________________________________
 ;;;; ---- select-keys-recursively ----
