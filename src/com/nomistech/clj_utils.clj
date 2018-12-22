@@ -24,8 +24,8 @@
   `(do
      ~form-1
      (do1
-         ~form-2
-       ~@other-forms)))
+      ~form-2
+      ~@other-forms)))
 
 ;;;; ___________________________________________________________________________
 ;;;; ---- econd ----
@@ -40,11 +40,11 @@
 ;;;; Maybe use the following approach instead of `map-keys` and `map-vals`
 
 #_
-(->> m
-     (map (fn [[k v]] [k (f1 v)]))
-     (map (fn [[k v]] [(f2 k) v]))
-     (map (fn [[k v]] [(f3 k) (f4 v)]))
-     (into {}))
+  (->> m
+       (map (fn [[k v]] [k (f1 v)]))
+       (map (fn [[k v]] [(f2 k) v]))
+       (map (fn [[k v]] [(f3 k) (f4 v)]))
+       (into {}))
 
 ;;;; ___________________________________________________________________________
 ;;;; ---- map-keys ----
