@@ -1,21 +1,21 @@
 echo ';;;; A new staged file
 (fact (+ 6 35)
-  => 42)'     > /Users/simonkatz/development-100/repositories/nomis/_apps-and-libs/clj-utils/test/com/nomistech/a-new-staged-file.NOT-CLJ
+  => 42)'     > ~/development-100/repositories/nomis/_apps-and-libs/clj-utils/test/com/nomistech/a-new-staged-file.NOT-CLJ
 
 echo ';;;; A new staged file
 (fact (+ 6 35)
-  => 42)'     > /Users/simonkatz/development-100/repositories/nomis/_apps-and-libs/clj-utils/test/com/nomistech/a-new-staged-file.clj
+  => 42)'     > ~/development-100/repositories/nomis/_apps-and-libs/clj-utils/test/com/nomistech/a-new-staged-file.clj
 
 echo ';;;; Staged changes
 (fact (+ 6 35)
-  => 42)'  >> /Users/simonkatz/development-100/repositories/nomis/_apps-and-libs/clj-utils/test/com/nomistech/clj_utils_test.clj
+  => 42)'  >> ~/development-100/repositories/nomis/_apps-and-libs/clj-utils/test/com/nomistech/clj_utils_test.clj
 
 git add .
 
 echo ';;;; A new unstaged file
 (fact (+ 6 35)
-  => 42) ; a new unstaged file'   > /Users/simonkatz/development-100/repositories/nomis/_apps-and-libs/clj-utils/test/com/nomistech/a-new-unstaged-file.clj
+  => 42) ; a new unstaged file'   > ~/development-100/repositories/nomis/_apps-and-libs/clj-utils/test/com/nomistech/a-new-unstaged-file.clj
 
 echo ';;;; Unstaged changes
 (fact (+ 6 35)
-  => 42)' >> /Users/simonkatz/development-100/repositories/nomis/_apps-and-libs/clj-utils/test/com/nomistech/clj_utils_test.clj
+  => 42)' >> ~/development-100/repositories/nomis/_apps-and-libs/clj-utils/test/com/nomistech/clj_utils_test.clj
