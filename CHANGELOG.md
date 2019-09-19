@@ -13,7 +13,7 @@ are explicitly noted.
 
 ## Unreleased
 
-- (nothing yet)
+- Make most things work with ClojureScript.
 
 ### Diffs
 

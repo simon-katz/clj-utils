@@ -1,7 +1,16 @@
 (ns com.nomistech.clj-utils
-  (:require [clojure.set :as set]
+  (:require [clojure.pprint :as pp]
+            [clojure.set :as set]
             [clojure.string :as str]
             [clojure.walk :as walk]))
+
+;;;; ___________________________________________________________________________
+;;;; ---- Java and JavaScript wrapping ----
+
+(defn my-error [cl-format-string & format-args]
+  (let [message (apply pp/cl-format nil cl-format-string format-args)]
+    #?(:clj  (Error. message)
+       :cljs (js/Error. message))))
 
 ;;;; ___________________________________________________________________________
 ;;;; ---- do1 ----
@@ -34,7 +43,7 @@
   "Like `cond`, except throws a RuntimeException if no clause matches."
   [& clauses]
   `(cond ~@clauses
-         :else (throw (RuntimeException. "econd has no matching clause"))))
+         :else (throw (my-error "econd has no matching clause"))))
 
 ;;;; ___________________________________________________________________________
 ;;;; Maybe use the following approach instead of `map-keys` and `map-vals`
@@ -302,7 +311,7 @@
              (for [p key-paths]
                (let [n (count p)]
                  (case n
-                   0 (throw (Error. "Empty path in key-paths"))
+                   0 (throw (my-error "Empty path in key-paths"))
                    1 (select-keys m [(first p)])
                    (if-not (contains? m (first p))
                      {}
@@ -372,7 +381,8 @@
   ;;   With:
   ;;     (time (dotimes [i 1000000] (last-index-of-char-in-string \c "abcdef")))
   ;;     "Elapsed time: 18.44 msecs"
-  (.lastIndexOf string (int char)))
+  #?(:clj  (.lastIndexOf string (int char))
+     :cljs (throw (my-error "last-index-of-char-in-string is not implemented for cljs"))))
 
 ;;;; ___________________________________________________________________________
 ;;;; ---- limiting-n-executions ----
@@ -455,27 +465,30 @@
 ;;;; Detection of Emacs temp files
 ;;;; - Copied from `stasis.core`.
 
-(def ^:private fsep (java.io.File/separator))
-(def ^:private fsep-regex (java.util.regex.Pattern/quote fsep))
+#?(:clj
+   (do
+     (def ^:private fsep (java.io.File/separator))
+     (def ^:private fsep-regex (java.util.regex.Pattern/quote fsep))
 
-(defn ^:private normalize-path [^String path]
-  (if (= fsep "/")
-    path
-    (.replaceAll path fsep-regex "/")))
+     (defn ^:private normalize-path [^String path]
+       (if (= fsep "/")
+         path
+         (.replaceAll path fsep-regex "/")))
 
-(defn ^:private get-path [^java.io.File path]
-  (-> path
-      .getPath
-      normalize-path))
+     (defn ^:private get-path [^java.io.File path]
+       (-> path
+           .getPath
+           normalize-path))
 
-(defn ^:private path->filename [^String path]
-  (last (str/split path #"/")))
+     (defn ^:private path->filename [^String path]
+       (last (str/split path #"/")))
 
-(defn emacs-temp-file-path? [^String path]
-  (let [filename (path->filename path)]
-    (or (.startsWith filename ".#")
-        (and (.startsWith filename "#")
-             (.endsWith filename "#")))))
+     (defn emacs-temp-file-path? [^String path]
+       (let [filename (path->filename path)]
+         (or (.startsWith filename ".#")
+             (and (.startsWith filename "#")
+                  (.endsWith filename "#")))))
 
-(defn emacs-temp-file? [^java.io.File file]
-  (-> file get-path emacs-temp-file-path?))
+     (defn emacs-temp-file? [^java.io.File file]
+       (-> file get-path emacs-temp-file-path?))
+     ))

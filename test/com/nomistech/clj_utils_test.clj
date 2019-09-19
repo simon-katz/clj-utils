@@ -83,7 +83,7 @@
 (fact "`sut/econd` works"
   (fact "no clauses"
     (sut/econd)
-    => (throws RuntimeException))
+    => (throws "econd has no matching clause"))
   (fact "many clauses"
     (fact "last clause truthy"
       (sut/econd false 1
@@ -101,7 +101,7 @@
                  nil   2
                  false 3
                  nil   4)
-      => (throws RuntimeException))))
+      => (throws "econd has no matching clause"))))
 
 ;;;; ___________________________________________________________________________
 ;;;; ---- sut/map-keys ----

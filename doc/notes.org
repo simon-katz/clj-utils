@@ -1,0 +1,3 @@
+* Todos
+** Move from Midje to clojure.test
+** Set up CLJS testing
