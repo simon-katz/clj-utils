@@ -11,13 +11,13 @@ In addition, breaking changes between successive
 initial development versions (that is 0.y.z versions)
 are explicitly noted.
 
-## Unreleased
+## 0.10.0 — 2019-09-22
 
 - Make most things work with ClojureScript.
 
 ### Diffs
 
-https://github.com/simon-katz/clj-utils/compare/0.9.0...HEAD
+https://github.com/simon-katz/clj-utils/compare/0.9.0...0.10.0
 
 
 ## 0.9.0 — 2018-10-20
