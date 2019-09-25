@@ -13,7 +13,7 @@ are explicitly noted.
 
 ## Unreleased
 
-- (nothing yet)
+- Add `:require-macros` of self in `com.nomistech.clj-utils`
 
 ### Diffs
 

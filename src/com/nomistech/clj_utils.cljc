@@ -1,4 +1,5 @@
 (ns com.nomistech.clj-utils
+  #?(:cljs (:require-macros [com.nomistech.clj-utils]))
   (:require [clojure.pprint :as pp]
             [clojure.set :as set]
             [clojure.string :as str]
