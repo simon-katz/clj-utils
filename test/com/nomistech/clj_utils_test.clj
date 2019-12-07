@@ -290,18 +290,31 @@
 ;;;; ___________________________________________________________________________
 ;;;; ---- sut/transitive-closure ----
 
-;; TODO: More substantial tests of `sut/transitive-closure`, e.g. edge cases.
-
 (fact "`sut/transitive-closure` works"
-  (sut/transitive-closure (fn [x]
-                            (case x
-                              1 [1 2 3 4]
-                              2 [200 1]
-                              3 [300 1]
-                              4 [1]
-                              []))
-                          1)
-  => #{1 2 3 4 200 300})
+
+  (fact "A function that returns no values"
+    (letfn [(f [_] [])]
+      (fact (sut/transitive-closure f 0) => #{0})))
+
+  (fact "The identity function (with result as a singleton collection)"
+    (letfn [(f [x] [x])]
+      (fact (sut/transitive-closure f 1) => #{1})))
+
+  (fact "A function that returns a single value"
+    (letfn [(f [x] (filter #(< % 1000) [(* x 10)]))]
+      (fact (sut/transitive-closure f 0) => #{0})
+      (fact (sut/transitive-closure f 1) => #{1 10 100})))
+
+  (fact "A function that returns its arg and sometimes another value"
+    (letfn [(f [x] (filter #(< % 1000) [x
+                                        (* x 10)]))]
+      (fact (sut/transitive-closure f 0) => #{0})
+      (fact (sut/transitive-closure f 1) => #{1 10 100})))
+
+  (fact "A function that returns either its arg or two other values"
+    (letfn [(f [x] (filter #(< % 1000) [(* x 10) (* x 20)]))]
+      (fact (sut/transitive-closure f 0) => #{0})
+      (fact (sut/transitive-closure f 1) => #{1 10 20 100 200 400}))))
 
 ;;;; ___________________________________________________________________________
 ;;;; ---- sut/transitive-closure-excluding-self ----
@@ -310,15 +323,25 @@
 ;;       e.g. edge cases.
 
 (fact "`sut/transitive-closure-excluding-self` works"
-  (sut/transitive-closure-excluding-self (fn [x]
-                                           (case x
-                                             1 [1 2 3 4]
-                                             2 [200 1]
-                                             3 [300 1]
-                                             4 [1]
-                                             []))
-                                         1)
-  => #{2 3 4 200 300})
+  (fact "test #1"
+    (sut/transitive-closure-excluding-self (fn [x]
+                                             (case x
+                                               1 [1 2 3 4]
+                                               2 [200 1]
+                                               3 [300 1]
+                                               4 [1]
+                                               []))
+                                           1)
+    => #{1 2 3 4 200 300})
+  (fact "test #2"
+    (sut/transitive-closure-excluding-self (fn [x]
+                                             (case x
+                                               1 [2 3 4]
+                                               2 [200]
+                                               3 [300]
+                                               []))
+                                           1)
+    => #{2 3 4 200 300}))
 
 ;;;; ___________________________________________________________________________
 ;;;; ---- sut/invert-function sut/invert-relation ----

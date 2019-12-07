@@ -180,24 +180,26 @@
 ;;;; ___________________________________________________________________________
 ;;;; ---- transitive-closure ----
 
-(defn ^:private transitive-closure-helper [f visited sofar vs]
-  (letfn [(helper [visited sofar vs]
+(defn ^:private transitive-closure-helper [f sofar vs]
+  (letfn [(helper [sofar vs]
             (if (empty? vs)
               sofar
-              (let [next-vs (set (->> (mapcat f vs)
-                                      (remove visited)
-                                      (remove vs)))]
-                (recur (into visited next-vs)
-                       (into sofar next-vs)
+              (let [;; If `vs` is not a set in the call of 'mapcat`, computation
+                    ;; takes ages with "large" input. I don't understand why.
+                    vs (set vs)
+                    next-vs (->> (mapcat f vs)
+                                 (remove vs)
+                                 (remove sofar))]
+                (recur (into sofar next-vs)
                        next-vs))))]
-    (helper visited sofar vs)))
+    (helper sofar vs)))
 
 (defn transitive-closure
   "The set of values obtained by starting with v, then applying f to v,
   then applying f to each of the results, and so on. v and all
   intermediate values are included in the result."
   [f v]
-  (transitive-closure-helper f #{v} #{v} #{v}))
+  (transitive-closure-helper f #{v} #{v}))
 
 ;;;; ___________________________________________________________________________
 ;;;; ---- transitive-closure-excluding-self ----
@@ -207,7 +209,7 @@
   then applying f to each of the results, and so on. All
   intermediate values are included in the result."
   [f v]
-  (transitive-closure-helper f #{v} #{} #{v}))
+  (transitive-closure-helper f #{} #{v}))
 
 ;;;; ___________________________________________________________________________
 ;;;; ---- invert-function invert-relation ----
