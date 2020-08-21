@@ -13,7 +13,7 @@ are explicitly noted.
 
 ## Unreleased
 
-- (nothing yet)
+- Fix bug in `transitive-clojure`.
 
 ### Diffs
 
