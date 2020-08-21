@@ -11,14 +11,14 @@ In addition, breaking changes between successive
 initial development versions (that is 0.y.z versions)
 are explicitly noted.
 
-## Unreleased
+## 0.12.0 — 2020-08-21
 
 - Fix bug in `transitive-clojure`.
 - Add `cl-exception` and deprecate `my-error`
 
 ### Diffs
 
-https://github.com/simon-katz/clj-utils/compare/0.11.0...HEAD
+https://github.com/simon-katz/clj-utils/compare/0.11.0...0.12.0
 
 
 ## 0.11.0 — 2019-09-25
