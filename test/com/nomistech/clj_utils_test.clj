@@ -6,6 +6,22 @@
             [ring.mock.request :as mock]))
 
 ;;;; ___________________________________________________________________________
+;;;; ---- sut/my-error ----
+
+(fact "`sut/my-error` works"
+  (throw (sut/my-error "Error ~s ~s" "arg-1" :arg-2))
+  => (throws Error
+             #"Error \"arg-1\" :arg-2"))
+
+;;;; ___________________________________________________________________________
+;;;; ---- sut/cl-exception ----
+
+(fact "`sut/cl-exception` works"
+  (throw (sut/cl-exception "Error ~s ~s" "arg-1" :arg-2))
+  => (throws sut/Exception-or-js-Error
+             #"Error \"arg-1\" :arg-2"))
+
+;;;; ___________________________________________________________________________
 ;;;; ---- sut/do1 ----
 
 (fact "`sut/do1` works"

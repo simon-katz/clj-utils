@@ -6,12 +6,26 @@
             [clojure.walk :as walk]))
 
 ;;;; ___________________________________________________________________________
-;;;; ---- Java and JavaScript wrapping ----
+;;;; ---- my-error ----
 
-(defn my-error [cl-format-string & format-args]
+(defn my-error
+  {:deprecated "0.12.0"}
+  [cl-format-string & format-args]
   (let [message (apply pp/cl-format nil cl-format-string format-args)]
     #?(:clj  (Error. message)
        :cljs (js/Error. message))))
+
+;;;; ___________________________________________________________________________
+;;;; ---- cl-exception ----
+
+(defn cl-exception [cl-format-string & format-args]
+  (let [message (apply pp/cl-format nil cl-format-string format-args)]
+    #?(:clj  (Exception. message)
+       :cljs (js/Error. message))))
+
+(def Exception-or-js-Error
+  #?(:clj  Exception
+     :cljs js/Error))
 
 ;;;; ___________________________________________________________________________
 ;;;; ---- do1 ----

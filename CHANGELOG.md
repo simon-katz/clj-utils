@@ -14,6 +14,7 @@ are explicitly noted.
 ## Unreleased
 
 - Fix bug in `transitive-clojure`.
+- Add `cl-exception` and deprecate `my-error`
 
 ### Diffs
 
