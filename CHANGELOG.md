@@ -11,6 +11,15 @@ In addition, breaking changes between successive
 initial development versions (that is 0.y.z versions)
 are explicitly noted.
 
+## Unreleased
+
+- (nothing yet)
+
+### Diffs
+
+https://github.com/simon-katz/clj-utils/compare/0.13.0...HEAD
+
+
 ## 0.13.0 — 2020-08-21
 
 - Change uses of `my-error` to uses of `cl-exception`
