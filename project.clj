@@ -7,8 +7,8 @@
   :profiles {:dev {:source-paths ["dev"]
                    :dependencies [[compojure "1.6.1"]
                                   [nomis-clj-repl-tools "0.1.2"]
-                                  [midje "1.9.1"]
-                                  [org.clojure/core.async "0.4.474"]
+                                  [midje "1.9.9"]
+                                  [org.clojure/core.async "1.3.610"]
                                   [ring/ring-mock "0.3.2"]]
                    :plugins [[lein-midje "3.2.1"]]}}
   ;;

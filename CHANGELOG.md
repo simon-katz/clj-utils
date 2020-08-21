@@ -14,6 +14,7 @@ are explicitly noted.
 ## Unreleased
 
 - Change uses of `my-error` to uses of `cl-exception`
+- Upgrade to midje 1.9.9 and core.async 1.3.610.
 
 ### Diffs
 
