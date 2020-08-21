@@ -58,7 +58,7 @@
   "Like `cond`, except throws a RuntimeException if no clause matches."
   [& clauses]
   `(cond ~@clauses
-         :else (throw (my-error "econd has no matching clause"))))
+         :else (throw (cl-exception "econd has no matching clause"))))
 
 ;;;; ___________________________________________________________________________
 ;;;; Maybe use the following approach instead of `map-keys` and `map-vals`
@@ -328,7 +328,7 @@
              (for [p key-paths]
                (let [n (count p)]
                  (case n
-                   0 (throw (my-error "Empty path in key-paths"))
+                   0 (throw (cl-exception "Empty path in key-paths"))
                    1 (select-keys m [(first p)])
                    (if-not (contains? m (first p))
                      {}
@@ -399,7 +399,7 @@
   ;;     (time (dotimes [i 1000000] (last-index-of-char-in-string \c "abcdef")))
   ;;     "Elapsed time: 18.44 msecs"
   #?(:clj  (.lastIndexOf string (int char))
-     :cljs (throw (my-error "last-index-of-char-in-string is not implemented for cljs"))))
+     :cljs (throw (cl-exception "last-index-of-char-in-string is not implemented for cljs"))))
 
 ;;;; ___________________________________________________________________________
 ;;;; ---- limiting-n-executions ----

@@ -13,7 +13,7 @@ are explicitly noted.
 
 ## Unreleased
 
-- (nothing yet)
+- Change uses of `my-error` to uses of `cl-exception`
 
 ### Diffs
 
