@@ -11,13 +11,13 @@ In addition, breaking changes between successive
 initial development versions (that is 0.y.z versions)
 are explicitly noted.
 
-## Unreleased
+## 0.14.0 — 2020-10-27
 
 - Make `last-index-of-char-in-string` work with cljs.
 
 ### Diffs
 
-https://github.com/simon-katz/clj-utils/compare/0.13.0...HEAD
+https://github.com/simon-katz/clj-utils/compare/0.13.0...0.14.0
 
 
 ## 0.13.0 — 2020-08-21
