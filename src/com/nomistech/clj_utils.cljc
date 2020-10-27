@@ -390,16 +390,10 @@
 ;;;; ___________________________________________________________________________
 ;;;; ---- last-index-of-char-in-string ----
 
-(defn last-index-of-char-in-string [^Character char ^String string]
-  ;; Effect of type hints:
-  ;;   Without:
-  ;;     (time (dotimes [i 1000000] (last-index-of-char-in-string \c "abcdef")))
-  ;;     "Elapsed time: 2564.688 msecs"
-  ;;   With:
-  ;;     (time (dotimes [i 1000000] (last-index-of-char-in-string \c "abcdef")))
-  ;;     "Elapsed time: 18.44 msecs"
-  #?(:clj  (.lastIndexOf string (int char))
-     :cljs (throw (cl-exception "last-index-of-char-in-string is not implemented for cljs"))))
+(defn last-index-of-char-in-string [char string]
+  (or (str/last-index-of string char)
+      ;; Make this -1 for backwards-compatibility.
+      -1))
 
 ;;;; ___________________________________________________________________________
 ;;;; ---- limiting-n-executions ----

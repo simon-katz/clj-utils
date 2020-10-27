@@ -13,7 +13,7 @@ are explicitly noted.
 
 ## Unreleased
 
-- (nothing yet)
+- Make `last-index-of-char-in-string` work with cljs.
 
 ### Diffs
 
