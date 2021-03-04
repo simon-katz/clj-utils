@@ -13,7 +13,7 @@ are explicitly noted.
 
 ## Unreleased
 
-- (nothing yet)
+- Add `finally` option to `with-extras`.
 
 ### Diffs
 
