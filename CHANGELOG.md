@@ -11,13 +11,13 @@ In addition, breaking changes between successive
 initial development versions (that is 0.y.z versions)
 are explicitly noted.
 
-## Unreleased
+## 0.15.0 — 2021-03-09
 
 - Add `finally` option to `with-extras`.
 
 ### Diffs
 
-https://github.com/simon-katz/clj-utils/compare/0.14.0...HEAD
+https://github.com/simon-katz/clj-utils/compare/0.14.0...0.15.0
 
 
 ## 0.14.0 — 2020-10-27
