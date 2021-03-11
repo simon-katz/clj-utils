@@ -259,18 +259,26 @@
 
 (defn fun-with-extras [before-f after-f finally-f f]
   (when before-f (before-f))
-  (try (let [result (f)]
-         (when after-f (after-f result))
-         result)
-       (finally
-         (when finally-f (finally-f)))))
+  (let [done-after?& (atom false)]
+    (try (let [result (f)]
+           (when after-f
+             (try (after-f result)
+                  (finally (reset! done-after?& true))))
+           result)
+         (finally
+           (when (and after-f (not @done-after?&))
+             (after-f ::non-local-exit))
+           (when finally-f (finally-f))))))
 
 (defmacro with-extras
   "Does `before`, then `body`, then `after`. Returns the result of `body`.
-  Within `after`, the result of `body` is available as `%result%`."
+  Within `after`, the result of `body` is available as `%result%`. In
+  the event of a non-local exit, the value of `%result%` is
+  `::non-local-exit`."
   {:style/indent 1}
   [{:keys [before after finally]}
    & body]
+  (when finally (println "WARNING: In `with-extras`: `:finally` is deprecated"))
   `(fun-with-extras ~(when before `(fn [] ~before))
                     ~(when after `(fn [~'%result%] ~after))
                     ~(when finally `(fn [] ~finally))

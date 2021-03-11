@@ -414,7 +414,7 @@
               4))
         => throws)
       (fact "`after` not done"
-        @side-effect-place => [1 2 :final-thing]))))
+        @side-effect-place => [1 2 ::sut/non-local-exit :final-thing]))))
 
 ;;;; ___________________________________________________________________________
 ;;;; ---- sut/member? ----

@@ -13,7 +13,8 @@ are explicitly noted.
 
 ## Unreleased
 
-- (nothing yet)
+- In `with-extras`, deprecate `finally` and call `after` when there's a
+  non-local exit.
 
 ### Diffs
 
