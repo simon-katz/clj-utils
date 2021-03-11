@@ -15,6 +15,7 @@ are explicitly noted.
 
 - In `with-extras`, deprecate `finally` and call `after` when there's a
   non-local exit.
+- Add `only-once`.
 
 ### Diffs
 

@@ -120,6 +120,41 @@
       => (throws "econd has no matching clause"))))
 
 ;;;; ___________________________________________________________________________
+;;;; ---- only-once ----
+
+(fact "`sut/only-once` works"
+  (let [n-threads          10
+        n-calls-per-thread 3
+        n-calls            (* n-threads n-calls-per-thread)
+        n-runs-of-inner-f& (atom 0)
+        results&           (atom [])
+        inner-f            #(do (swap! n-runs-of-inner-f& inc)
+                                42)
+        returned-f         (sut/only-once inner-f)
+        outer-f            #(swap! results& conj (returned-f))]
+    (doseq [thread (repeatedly n-threads
+                               #(a/thread
+                                  ;; Be non-deterministic:
+                                  (a/<!! (a/timeout (rand-int 10)))
+                                  (dotimes [_ n-calls-per-thread]
+                                    (outer-f))))]
+      (a/<!! thread) ; wait for thread to complete
+      )
+    (let [results @results&]
+
+      (fact "The supplied function is run once"
+        @n-runs-of-inner-f&
+        => 1)
+
+      (fact "The result of calling the returned function is 42 once"
+        (count (filter #{42} results))
+        => 1)
+
+      (fact "The result of calling the returned function is `::sut/already-run` on all other occasions"
+        (remove #{42} results)
+        => (repeat (dec n-calls) ::sut/already-run)))))
+
+;;;; ___________________________________________________________________________
 ;;;; ---- sut/map-keys ----
 
 (fact "`sut/map-keys` works"

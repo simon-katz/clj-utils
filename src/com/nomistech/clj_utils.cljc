@@ -61,6 +61,21 @@
          :else (throw (cl-exception "econd has no matching clause"))))
 
 ;;;; ___________________________________________________________________________
+;;;; ---- only-once ----
+
+(defn only-once
+  "`f` is a function of no args. Return a function that on its first
+  invocation calls `f`, and on subsequent invocations does nothing and
+  returns `::already-run`.
+  Unlike `memoize`, the function is called only once even if invoked from
+  multiple threads at the same time."
+  [f]
+  (let [done?& (atom false)]
+    #(if (compare-and-set! done?& false true)
+       (f)
+       ::already-run)))
+
+;;;; ___________________________________________________________________________
 ;;;; Maybe use the following approach instead of `map-keys` and `map-vals`
 
 #_
