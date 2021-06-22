@@ -11,6 +11,15 @@ In addition, breaking changes between successive
 initial development versions (that is 0.y.z versions)
 are explicitly noted.
 
+## Unreleased
+
+- (nothing yet)
+
+### Diffs
+
+https://github.com/simon-katz/clj-utils/compare/0.16.0...HEAD
+
+
 ## 0.16.0 — 2021-06-22
 
 - In `with-extras`, deprecate `finally` and call `after` when there's a
