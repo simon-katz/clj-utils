@@ -622,6 +622,16 @@
     (sut/positions even? [11 13 14 14 15]) => [2 3]))
 
 ;;;; ___________________________________________________________________________
+;;;; ---- sut/drop-nth ----
+
+(fact "`sut/drop-nth` works"
+  (sut/drop-nth -1 [:a :b :c]) => [:a :b :c]
+  (sut/drop-nth  0 [:a :b :c]) => [   :b :c]
+  (sut/drop-nth  1 [:a :b :c]) => [:a    :c]
+  (sut/drop-nth  2 [:a :b :c]) => [:a :b   ]
+  (sut/drop-nth  3 [:a :b :c]) => [:a :b :c])
+
+;;;; ___________________________________________________________________________
 ;;;; ---- sut/unchunk ----
 
 (defn fun-with-return-args-to-even?-and-identity [fun]

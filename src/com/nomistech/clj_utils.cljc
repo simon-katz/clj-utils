@@ -394,6 +394,16 @@
   (first (positions pred coll)))
 
 ;;;; ___________________________________________________________________________
+;;;; ---- drop-nth ----
+
+(defn drop-nth
+  ;; From https://stackoverflow.com/a/24553906/2148181
+  "Return a lazy sequence of all items in coll apart from the n'th item."
+  [n coll]
+  (keep-indexed #(if (= %1 n) nil %2)
+                coll))
+
+;;;; ___________________________________________________________________________
 ;;;; ---- unchunk ----
 
 (defn unchunk
