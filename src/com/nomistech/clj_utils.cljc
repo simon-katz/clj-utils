@@ -367,12 +367,12 @@
 
 (defn indexed
   ;; From http://stackoverflow.com/questions/4830900, with changes.
-  from 's' and indexes count up from zero.
   "Return a lazy sequence of [index, item] pairs, where items come
+  from 'coll' and indexes count up from zero.
   eg:
       (indexed '(a b c d))  =>  ([0 a] [1 b] [2 c] [3 d])"
-  [s]
-  (map-indexed vector s))
+  [coll]
+  (map-indexed vector coll))
 
 ;;;; ___________________________________________________________________________
 ;;;; ---- position ----
