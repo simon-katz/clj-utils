@@ -404,6 +404,16 @@
                 coll))
 
 ;;;; ___________________________________________________________________________
+;;;; ---- edit-nth ----
+
+(defn edit-nth
+  "Return a lazy sequence of all items in coll, with the n'th item
+  replaced with the value of applying `f` to it."
+  [n coll f]
+  (keep-indexed #(if (= %1 n) (f %2) %2)
+                coll))
+
+;;;; ___________________________________________________________________________
 ;;;; ---- unchunk ----
 
 (defn unchunk
