@@ -609,7 +609,7 @@
 ;;;; ---- sut/position ----
 ;;;; ---- sut/positions ----
 
-(fact "sut/`position` and sut/`positions` work"
+(fact "`sut/position` and `sut/positions` work"
   (fact "`sut/position` tests"
     (sut/position even? []) => nil
     (sut/position even? [12]) => 0
