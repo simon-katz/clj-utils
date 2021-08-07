@@ -367,8 +367,8 @@
 
 (defn indexed
   ;; From http://stackoverflow.com/questions/4830900, with changes.
-  "Returns a lazy sequence of [index, item] pairs, where items come
   from 's' and indexes count up from zero.
+  "Return a lazy sequence of [index, item] pairs, where items come
   eg:
       (indexed '(a b c d))  =>  ([0 a] [1 b] [2 c] [3 d])"
   [s]
@@ -380,7 +380,7 @@
 
 (defn positions
   ;; From http://stackoverflow.com/questions/4830900.
-  "Returns a lazy sequence containing the positions at which pred
+  "Return a lazy sequence containing the positions at which pred
   is true for items in coll."
   [pred coll]
   (for [[idx elt] (indexed coll)
@@ -388,6 +388,8 @@
     idx))
 
 (defn position
+  "Return the index of the first item in 'coll' that satisfies 'pred',
+  or nil if there is no such item."
   [pred coll]
   (first (positions pred coll)))
 
