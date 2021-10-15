@@ -52,6 +52,14 @@
        ~@other-forms)))
 
 ;;;; ___________________________________________________________________________
+;;;; ---- dotdot ----
+
+(defmacro dotdot
+  "Like `..` but allows only a single arg, so `(dotdot foo)` expands to `foo`."
+  ([x] x)
+  ([x & forms] `(dotdot (. ~x ~(first forms)) ~@(rest forms))))
+
+;;;; ___________________________________________________________________________
 ;;;; ---- econd ----
 
 (defmacro econd

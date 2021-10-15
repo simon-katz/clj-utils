@@ -94,6 +94,19 @@
         @side-effect-place => [1 2 3]))))
 
 ;;;; ___________________________________________________________________________
+;;;; ---- sut/dotdot ----
+
+(fact "`sut/dotdot` works"
+  (fact "Macroexpansion"
+    (fact (macroexpand '(sut/dotdot a)) => 'a)
+    (fact (macroexpand '(sut/dotdot a b)) => '(. a b))
+    (fact (macroexpand '(sut/dotdot a b c)) => '(. (. a b) c)))
+  (fact "Example use"
+    (fact (type (sut/dotdot System (getProperties))) => java.util.Properties)
+    (fact (type (sut/dotdot System (getProperties) (get "os.name"))) => String)
+    (fact (sut/dotdot System (getProperties) (get "non-existent-$%^")) => nil)))
+
+;;;; ___________________________________________________________________________
 ;;;; ---- sut/econd ----
 
 (fact "`sut/econd` works"

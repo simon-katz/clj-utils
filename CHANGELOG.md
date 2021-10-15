@@ -15,6 +15,7 @@ are explicitly noted.
 
 - Add `drop-nth`.
 - Add `edit-nth`.
+- Add `dotdot`.
 
 ### Diffs
 
