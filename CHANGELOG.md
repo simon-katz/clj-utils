@@ -11,7 +11,7 @@ In addition, breaking changes between successive
 initial development versions (that is 0.y.z versions)
 are explicitly noted.
 
-## Unreleased
+## 0.17.0 — 2021-10-15
 
 - Add `drop-nth`.
 - Add `edit-nth`.
@@ -19,7 +19,7 @@ are explicitly noted.
 
 ### Diffs
 
-https://github.com/simon-katz/clj-utils/compare/0.16.0...HEAD
+https://github.com/simon-katz/clj-utils/compare/0.16.0...0.17.0
 
 
 ## 0.16.0 — 2021-06-22
