@@ -13,7 +13,8 @@ are explicitly noted.
 
 ## Unreleased
 
-- (nothing yet)
+- Add `drop-nth`.
+- Add `edit-nth`.
 
 ### Diffs
 
