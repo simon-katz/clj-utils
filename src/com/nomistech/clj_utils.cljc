@@ -422,6 +422,39 @@
                 coll))
 
 ;;;; ___________________________________________________________________________
+;;;; ---- dups ----
+
+(defn dups
+  "Return the items that are duplicated in `coll`, in the order that the
+  first duplicates appear."
+  [coll]
+  ;; Note: If you aren't interested in preserving order, you could use:
+  ;;   (for [[v freq] (frequencies coll)
+  ;;         :when (> freq 1)]
+  ;;     v)
+  (-> (reduce (fn [{:keys [sofar-items-set
+                           sofar-dups-set
+                           _sofar-dups-vec]
+                    :as sofar}
+                   x]
+                (cond (get sofar-dups-set x)
+                      sofar
+                      ;;
+                      (get sofar-items-set x)
+                      (-> sofar
+                          (update :sofar-dups-set conj x)
+                          (update :sofar-dups-vec conj x))
+                      ;;
+                      :else
+                      (-> sofar
+                          (update :sofar-items-set conj x))))
+              {:sofar-items-set #{}
+               :sofar-dups-set  #{}
+               :sofar-dups-vec  []}
+              coll)
+      :sofar-dups-vec))
+
+;;;; ___________________________________________________________________________
 ;;;; ---- unchunk ----
 
 (defn unchunk

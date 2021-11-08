@@ -43,7 +43,7 @@ For now, the only documentation is doc strings.
 
 ## License
 
-Copyright © 2018-2020 Simon Katz
+Copyright © 2018-2021 Simon Katz
 
 Distributed under the Eclipse Public License either version 1.0 or (at
 your option) any later version.
