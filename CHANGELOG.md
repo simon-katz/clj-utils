@@ -14,6 +14,8 @@ are explicitly noted.
 ## Unreleased
 
 - Add `dups`.
+- Change `%result%` to `_result_` to avoid bad interaction with
+  anonymous functions.
 
 ### Diffs
 

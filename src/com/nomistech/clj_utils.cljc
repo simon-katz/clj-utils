@@ -295,15 +295,15 @@
 
 (defmacro with-extras
   "Does `before`, then `body`, then `after`. Returns the result of `body`.
-  Within `after`, the result of `body` is available as `%result%`. In
-  the event of a non-local exit, the value of `%result%` is
+  Within `after`, the result of `body` is available as `_result_`. In
+  the event of a non-local exit, the value of `_result_` is
   `::non-local-exit`."
   {:style/indent 1}
   [{:keys [before after finally]}
    & body]
   (when finally (println "WARNING: In `with-extras`: `:finally` is deprecated"))
   `(fun-with-extras ~(when before `(fn [] ~before))
-                    ~(when after `(fn [~'%result%] ~after))
+                    ~(when after `(fn [~'_result_] ~after))
                     ~(when finally `(fn [] ~finally))
                     (fn [] ~@body)))
 

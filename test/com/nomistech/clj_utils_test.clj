@@ -441,7 +441,7 @@
     (let [side-effect-place (atom [])]
       (fact "Value is correct"
         (sut/with-extras {:before (swap! side-effect-place conj 1)
-                          :after  (swap! side-effect-place conj %result%)
+                          :after  (swap! side-effect-place conj _result_)
                           :finally (swap! side-effect-place conj :final-thing)}
           (do (swap! side-effect-place conj 2)
               (swap! side-effect-place conj 3)
@@ -454,7 +454,7 @@
     (let [side-effect-place (atom [])]
       (fact "throws"
         (sut/with-extras {:before (swap! side-effect-place conj 1)
-                          :after  (swap! side-effect-place conj %result%)
+                          :after  (swap! side-effect-place conj _result_)
                           :finally (swap! side-effect-place conj :final-thing)}
           (do (swap! side-effect-place conj 2)
               (/ 0 0)
@@ -462,7 +462,22 @@
               4))
         => throws)
       (fact "`after` not done"
-        @side-effect-place => [1 2 ::sut/non-local-exit :final-thing]))))
+        @side-effect-place => [1 2 ::sut/non-local-exit :final-thing])))
+
+  (fact "Can nest and use `_result_` at multiple levels"
+    (let [side-effect-place (atom [])]
+      (sut/with-extras {:after (swap! side-effect-place conj _result_)}
+        (sut/with-extras {:after (swap! side-effect-place conj _result_)}
+          :result-1)
+        :result-2)
+      (fact @side-effect-place => [:result-1 :result-2])))
+
+  (fact "We can use `_result_` in anonymous functions (previously we had `_result_` which gave a reader error)"
+    (let [side-effect-place (atom [])
+          anonymous-fun #(sut/with-extras {:after (swap! side-effect-place conj _result_)}
+                           :the-result)]
+      (anonymous-fun)
+      (fact @side-effect-place => [:the-result]))))
 
 ;;;; ___________________________________________________________________________
 ;;;; ---- sut/member? ----
