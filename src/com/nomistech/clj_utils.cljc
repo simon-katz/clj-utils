@@ -355,35 +355,35 @@
 
 (defn validate-map
   "Validates a map against a specification.
-  
+
   spec is a map with optional keys:
   - :required-keys - sequence of keys that must be present
-  - :optional-keys - sequence of keys that may be present  
+  - :optional-keys - sequence of keys that may be present
   - :validators - map of key -> predicate function pairs
-  
+
   Returns [valid? errors] where errors is a vector of error descriptions."
   [m spec]
   (let [{:keys [required-keys optional-keys validators]} spec
         allowed-keys (set (concat required-keys optional-keys))
         errors (atom [])]
-    
+
     ;; Check required keys
     (doseq [k required-keys]
       (when-not (contains? m k)
         (swap! errors conj (str "Missing required key: " k))))
-    
+
     ;; Check for unexpected keys
     (when (or required-keys optional-keys)
       (doseq [k (keys m)]
         (when-not (contains? allowed-keys k)
           (swap! errors conj (str "Unexpected key: " k)))))
-    
+
     ;; Run validators
     (doseq [[k validator] validators]
       (when (contains? m k)
         (when-not (validator (get m k))
           (swap! errors conj (str "Validation failed for key " k ": " (get m k))))))
-    
+
     [(empty? @errors) @errors]))
 
 ;;;; ___________________________________________________________________________
@@ -400,18 +400,18 @@
 
 (defn deep-merge
   "Recursively merges maps, with later values taking precedence.
-  
+
   Unlike `merge`, this function merges nested maps recursively rather than
-  replacing them entirely. `nil` values are treated as empty maps for 
+  replacing them entirely. `nil` values are treated as empty maps for
   consistency with `merge` behavior.
-  
+
   Examples:
     (deep-merge {:a 1 :b {:x 10}} {:b {:y 20}})
     ;=> {:a 1 :b {:x 10 :y 20}}
-    
+
     (deep-merge {:a 1} nil {:b 2})
     ;=> {:a 1 :b 2}
-    
+
   If values are not maps, the last value wins:
     (deep-merge {:a {:b 1}} {:a 2})
     ;=> {:a 2}"
@@ -513,7 +513,7 @@
 (defn dups
   "Return the items that are duplicated in `coll`, in the order that the
   first duplicates appear.
-  
+
   Examples:
     (dups [1 2 3 2 4 1 5]) ;=> [2 1]
     (dups [1 2 3])         ;=> []"
@@ -593,7 +593,7 @@
 ;;;; ___________________________________________________________________________
 ;;;; ---- last-index-of-char-in-string ----
 
-(defn last-index-of-char-in-string 
+(defn last-index-of-char-in-string
   "Find the last index of a character in a string. Returns -1 if not found."
   [^Character char ^String string]
   (or (str/last-index-of string char)
