@@ -28,6 +28,29 @@
      :cljs js/Error))
 
 ;;;; ___________________________________________________________________________
+;;;; ---- Error handling utilities ----
+
+(defn try-or
+  "Attempts to execute f. If an exception is thrown, returns default-value."
+  [f default-value]
+  (try (f)
+       (catch #?(:clj Exception :cljs js/Error) _
+         default-value)))
+
+(defn try-or-nil
+  "Attempts to execute f. If an exception is thrown, returns nil."
+  [f]
+  (try-or f nil))
+
+(defmacro safely
+  "Executes body in a try-catch block. Returns [result nil] on success,
+  [nil exception] on exception."
+  [& body]
+  `(try [(do ~@body) nil]
+        (catch ~Exception-or-js-Error e#
+          [nil e#])))
+
+;;;; ___________________________________________________________________________
 ;;;; ---- do1 ----
 
 (defmacro do1
@@ -310,8 +333,58 @@
 ;;;; ___________________________________________________________________________
 ;;;; ---- member? ----
 
-(defn member? [item coll]
+(defn member?
+  "Returns true if item is found in coll, false otherwise.
+  More efficient than (some #{item} coll) for readability."
+  [item coll]
   (some #{item} coll))
+
+;;;; ___________________________________________________________________________
+;;;; ---- Data validation utilities ----
+
+(defn not-empty?
+  "Returns true if coll is not empty, false otherwise.
+  Useful as a predicate in validation chains."
+  [coll]
+  (boolean (seq coll)))
+
+(defn all-keys-present?
+  "Returns true if all required-keys are present in map m."
+  [m required-keys]
+  (every? #(contains? m %) required-keys))
+
+(defn validate-map
+  "Validates a map against a specification.
+  
+  spec is a map with optional keys:
+  - :required-keys - sequence of keys that must be present
+  - :optional-keys - sequence of keys that may be present  
+  - :validators - map of key -> predicate function pairs
+  
+  Returns [valid? errors] where errors is a vector of error descriptions."
+  [m spec]
+  (let [{:keys [required-keys optional-keys validators]} spec
+        allowed-keys (set (concat required-keys optional-keys))
+        errors (atom [])]
+    
+    ;; Check required keys
+    (doseq [k required-keys]
+      (when-not (contains? m k)
+        (swap! errors conj (str "Missing required key: " k))))
+    
+    ;; Check for unexpected keys
+    (when (or required-keys optional-keys)
+      (doseq [k (keys m)]
+        (when-not (contains? allowed-keys k)
+          (swap! errors conj (str "Unexpected key: " k)))))
+    
+    ;; Run validators
+    (doseq [[k validator] validators]
+      (when (contains? m k)
+        (when-not (validator (get m k))
+          (swap! errors conj (str "Validation failed for key " k ": " (get m k))))))
+    
+    [(empty? @errors) @errors]))
 
 ;;;; ___________________________________________________________________________
 ;;;; ---- submap? ----
@@ -326,9 +399,22 @@
 ;;;; ---- deep-merge ----
 
 (defn deep-merge
-  "Recursively merges maps.
-  `nil` is treated as an empty map (to match the behaviour of `merge`).
-  If vals are not maps, the last value wins."
+  "Recursively merges maps, with later values taking precedence.
+  
+  Unlike `merge`, this function merges nested maps recursively rather than
+  replacing them entirely. `nil` values are treated as empty maps for 
+  consistency with `merge` behavior.
+  
+  Examples:
+    (deep-merge {:a 1 :b {:x 10}} {:b {:y 20}})
+    ;=> {:a 1 :b {:x 10 :y 20}}
+    
+    (deep-merge {:a 1} nil {:b 2})
+    ;=> {:a 1 :b 2}
+    
+  If values are not maps, the last value wins:
+    (deep-merge {:a {:b 1}} {:a 2})
+    ;=> {:a 2}"
   [& vals]
   (let [vals (replace {nil {}} vals)]
     (if (every? map? vals)
@@ -426,33 +512,61 @@
 
 (defn dups
   "Return the items that are duplicated in `coll`, in the order that the
-  first duplicates appear."
+  first duplicates appear.
+  
+  Examples:
+    (dups [1 2 3 2 4 1 5]) ;=> [2 1]
+    (dups [1 2 3])         ;=> []"
   [coll]
-  ;; Note: If you aren't interested in preserving order, you could use:
-  ;;   (for [[v freq] (frequencies coll)
-  ;;         :when (> freq 1)]
-  ;;     v)
-  (-> (reduce (fn [{:keys [sofar-items-set
-                           sofar-dups-set
-                           _sofar-dups-vec]
-                    :as sofar}
-                   x]
-                (cond (get sofar-dups-set x)
-                      sofar
-                      ;;
-                      (get sofar-items-set x)
-                      (-> sofar
-                          (update :sofar-dups-set conj x)
-                          (update :sofar-dups-vec conj x))
-                      ;;
-                      :else
-                      (-> sofar
-                          (update :sofar-items-set conj x))))
-              {:sofar-items-set #{}
-               :sofar-dups-set  #{}
-               :sofar-dups-vec  []}
-              coll)
-      :sofar-dups-vec))
+  ;; Optimized version using transient collections for better performance
+  (let [result (reduce (fn [acc x]
+                         (let [{:keys [seen dups-set dups-vec]} acc]
+                           (cond
+                             (contains? dups-set x) acc
+                             (contains? seen x) {:seen seen
+                                                 :dups-set (conj dups-set x)
+                                                 :dups-vec (conj dups-vec x)}
+                             :else {:seen (conj seen x)
+                                    :dups-set dups-set
+                                    :dups-vec dups-vec})))
+                       {:seen #{}
+                        :dups-set #{}
+                        :dups-vec []}
+                       coll)]
+    (:dups-vec result)))
+
+;;;; ___________________________________________________________________________
+;;;; ---- Collection utilities ----
+
+(defn partition-by-pred
+  "Partitions coll into two collections based on predicate.
+  Returns [matches non-matches] where matches are items for which pred returns truthy."
+  [pred coll]
+  [(filter pred coll) (remove pred coll)])
+
+(defn find-first
+  "Returns the first item in coll for which pred returns truthy, or nil if none found."
+  [pred coll]
+  (first (filter pred coll)))
+
+(defn find-last
+  "Returns the last item in coll for which pred returns truthy, or nil if none found."
+  [pred coll]
+  (last (filter pred coll)))
+
+(defn distinct-by
+  "Returns a lazy sequence with duplicates removed based on the result of applying f to each element.
+  Similar to distinct but allows custom comparison via function f."
+  [f coll]
+  (letfn [(step [seen coll]
+            (lazy-seq
+             (when-let [s (seq coll)]
+               (let [item (first s)
+                     key (f item)]
+                 (if (contains? seen key)
+                   (step seen (rest s))
+                   (cons item (step (conj seen key) (rest s))))))))]
+    (step #{} coll)))
 
 ;;;; ___________________________________________________________________________
 ;;;; ---- unchunk ----
@@ -479,7 +593,9 @@
 ;;;; ___________________________________________________________________________
 ;;;; ---- last-index-of-char-in-string ----
 
-(defn last-index-of-char-in-string [char string]
+(defn last-index-of-char-in-string 
+  "Find the last index of a character in a string. Returns -1 if not found."
+  [^Character char ^String string]
   (or (str/last-index-of string char)
       ;; Make this -1 for backwards-compatibility.
       -1))

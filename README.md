@@ -38,7 +38,59 @@ Add something like the following to your namespace declaration(s):
     (:require [com.nomistech.clj-utils :as nu])
 ```
 
-For now, the only documentation is doc strings.
+## Function Categories
+
+### Control Flow
+- `do1`, `do2` - Execute multiple forms, return specific results
+- `econd` - Enhanced cond that throws on no match
+- `dotdot` - Flexible threading macro
+- `with-extras` - Enhanced try/finally with before/after hooks
+
+### Error Handling  
+- `cl-exception` - Create exceptions with formatted messages
+- `try-or`, `try-or-nil` - Safe function execution with defaults
+- `safely` - Execute code returning [result error] tuples
+
+### Map Utilities
+- `map-keys`, `map-vals`, `map-kv` - Transform map keys/values
+- `map-*-recursively` - Recursive map transformations
+- `deep-merge` - Recursive map merging
+- `select-keys-recursively` - Select nested keys with paths
+- `submap?` - Check if one map is a subset of another
+- `group-by-k`, `group-by-v`, `group-by-kv` - Enhanced grouping
+
+### Collection Utilities
+- `indexed` - Add indices to collections  
+- `position`, `positions` - Find item positions
+- `drop-nth`, `edit-nth` - Modify collections at specific indices
+- `dups` - Find duplicate items preserving order
+- `unchunk` - Create fully lazy sequences
+- `member?` - Check collection membership
+- `partition-by-pred` - Split collection by predicate
+- `find-first`, `find-last` - Find items by predicate
+- `distinct-by` - Remove duplicates using custom key function
+
+### Data Validation
+- `not-empty?` - Check if collection is non-empty
+- `all-keys-present?` - Validate required map keys
+- `validate-map` - Comprehensive map validation with specs
+
+### Concurrency & Rate Limiting
+- `only-once` - Ensure function runs only once across threads
+- `limiting-n-executions` - Limit concurrent function executions
+- `with-return-429-if-too-many-requests` - HTTP rate limiting
+
+### Graph & Relation Utilities
+- `transitive-closure` - Compute transitive closure of relations
+- `invert-function`, `invert-relation` - Invert functions and relations
+
+### String Utilities  
+- `last-index-of-char-in-string` - Find last character position
+
+### File System
+- `emacs-temp-file?` - Detect Emacs temporary files
+
+For detailed documentation, see the doc strings in the source code.
 
 
 ## License

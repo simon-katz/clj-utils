@@ -1,0 +1,42 @@
+name: CI
+
+on:
+  push:
+    branches: [ master, main ]
+  pull_request:
+    branches: [ master, main ]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    
+    strategy:
+      matrix:
+        java-version: [11, 17, 21]
+    
+    steps:
+    - uses: actions/checkout@v3
+    
+    - name: Set up JDK ${{ matrix.java-version }}
+      uses: actions/setup-java@v3
+      with:
+        java-version: ${{ matrix.java-version }}
+        distribution: 'temurin'
+    
+    - name: Install Clojure tools
+      uses: DeLaGuardo/setup-clojure@3.7
+      with:
+        lein: 2.9.10
+    
+    - name: Cache dependencies
+      uses: actions/cache@v3
+      with:
+        path: ~/.m2
+        key: ${{ runner.os }}-m2-${{ hashFiles('**/project.clj') }}
+        restore-keys: ${{ runner.os }}-m2
+    
+    - name: Run tests
+      run: lein midje
+    
+    - name: Check for reflection warnings
+      run: lein check

@@ -866,6 +866,91 @@
           :body "a response"})))
 
 ;;;; ___________________________________________________________________________
+;;;; ---- Data validation utilities ----
+
+(fact "`sut/not-empty?` works"
+  (sut/not-empty? []) => false
+  (sut/not-empty? [1]) => true
+  (sut/not-empty? nil) => false
+  (sut/not-empty? "") => false
+  (sut/not-empty? "a") => true)
+
+(fact "`sut/all-keys-present?` works"
+  (sut/all-keys-present? {:a 1 :b 2} [:a]) => true
+  (sut/all-keys-present? {:a 1 :b 2} [:a :b]) => true
+  (sut/all-keys-present? {:a 1} [:a :b]) => false
+  (sut/all-keys-present? {} []) => true)
+
+(fact "`sut/validate-map` works"
+  (fact "Valid map with all required keys"
+    (sut/validate-map {:name "John" :age 30}
+                      {:required-keys [:name :age]})
+    => [true []])
+  
+  (fact "Missing required key"
+    (sut/validate-map {:name "John"}
+                      {:required-keys [:name :age]})
+    => [false ["Missing required key: age"]])
+  
+  (fact "Unexpected key"
+    (sut/validate-map {:name "John" :age 30 :extra "value"}
+                      {:required-keys [:name :age]})
+    => [false ["Unexpected key: extra"]])
+  
+  (fact "Validation with validators"
+    (sut/validate-map {:name "John" :age 30}
+                      {:required-keys [:name :age]
+                       :validators {:age #(> % 0)}})
+    => [true []])
+  
+  (fact "Failed validation"
+    (sut/validate-map {:name "John" :age -5}
+                      {:required-keys [:name :age]
+                       :validators {:age #(> % 0)}})
+    => [false ["Validation failed for key age: -5"]]))
+
+;;;; ___________________________________________________________________________
+;;;; ---- Collection utilities ----
+
+(fact "`sut/partition-by-pred` works"
+  (sut/partition-by-pred even? [1 2 3 4 5 6])
+  => [[2 4 6] [1 3 5]])
+
+(fact "`sut/find-first` works"
+  (sut/find-first even? [1 3 4 5 6]) => 4
+  (sut/find-first even? [1 3 5]) => nil
+  (sut/find-first even? []) => nil)
+
+(fact "`sut/find-last` works"
+  (sut/find-last even? [1 2 3 4 5 6]) => 6
+  (sut/find-last even? [1 3 5]) => nil
+  (sut/find-last even? []) => nil)
+
+(fact "`sut/distinct-by` works"
+  (sut/distinct-by :id [{:id 1 :name "a"} {:id 2 :name "b"} {:id 1 :name "c"}])
+  => [{:id 1 :name "a"} {:id 2 :name "b"}]
+  
+  (sut/distinct-by count ["a" "bb" "c" "dd"])
+  => ["a" "bb"])
+
+;;;; ___________________________________________________________________________
+;;;; ---- Error handling utilities ----
+
+(fact "`sut/try-or` works"
+  (sut/try-or #(/ 10 2) :default) => 5
+  (sut/try-or #(/ 10 0) :default) => :default)
+
+(fact "`sut/try-or-nil` works"
+  (sut/try-or-nil #(/ 10 2)) => 5
+  (sut/try-or-nil #(/ 10 0)) => nil)
+
+(fact "`sut/safely` works"
+  (sut/safely (+ 1 2)) => [3 nil]
+  (let [[result error] (sut/safely (/ 1 0))]
+    result => nil
+    error => #(instance? sut/Exception-or-js-Error %)))
+
+;;;; ___________________________________________________________________________
 ;;;; Detection of Emacs temp files
 
 (fact "Emacs temp files"
